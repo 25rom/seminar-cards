@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Углубленный курс Art Body Flow | 26 апреля, НН</title>
     <style>
-        /* Импорт шрифта Montserrat */
+        /* Импорт шрифтов: Montserrat для заголовков, Space Mono (или системный) для печатного текста */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap');
 
+        /* НОВАЯ ОРГАНИЧЕСКАЯ ПАЛИТРА (Морковный + Зеленый) */
         :root {
-            --green-dark: #1b2a21;   /* Глубокий хвойный */
-            --green-light: #2c4234;  /* Светлый акцентный */
-            --carrot: #E85D04;       /* Морковный */
-            --carrot-hover: #DC2F02; 
-            --bg-sand: #F4F1EB;      /* Светлый фон */
+            --green-dark: #1b2a21;   /* Глубокий хвойный/лесной */
+            --green-light: #2c4234;  /* Светлый оттенок зеленого для акцентов */
+            --carrot: #E85D04;       /* Сочный морковный/энергия */
+            --carrot-hover: #DC2F02; /* Более темный морковный для наведения */
+            --bg-sand: #F4F1EB;      /* Теплый светлый фон (не чисто белый) */
             --text-dark: #1b2a21;    
             --white: #ffffff;
         }
@@ -36,6 +37,7 @@
 
         section { padding: 90px 0; }
 
+        /* Типографика */
         h1, h2, h3 { text-transform: uppercase; margin-top: 0; }
 
         h1 {
@@ -58,7 +60,7 @@
         h3 { font-size: 1.3em; font-weight: 800; letter-spacing: 1px; color: var(--green-dark); }
         p { font-size: 1.1em; font-weight: 400; margin-bottom: 20px; }
 
-        /* КНОПКА */
+        /* СОВРЕМЕННАЯ КНОПКА */
         .btn {
             display: inline-block;
             background-color: var(--carrot);
@@ -82,7 +84,7 @@
             box-shadow: 0 15px 25px rgba(232, 93, 4, 0.4);
         }
 
-        /* HERO */
+        /* ГЛАВНЫЙ ЭКРАН */
         .hero {
             position: relative;
             background-color: var(--green-dark);
@@ -136,7 +138,6 @@
         }
         .hero-tagline strong { color: var(--carrot); font-weight: 600; margin: 0 5px; }
 
-        /* СПИСКИ */
         .editorial-list { list-style: none; padding: 0; margin: 0; }
         .editorial-list li {
             position: relative;
@@ -154,7 +155,6 @@
             border-radius: 5px;
         }
 
-        /* СЕТКА БЛОКОВ */
         .bg-white { background-color: var(--white); }
         .flex-row { display: flex; gap: 60px; flex-wrap: wrap; align-items: center; }
         .flex-half { flex: 1; min-width: 300px; }
@@ -167,7 +167,6 @@
             background-color: rgba(44, 66, 52, 0.03);
         }
 
-        /* ВИДЕО */
         .video-placeholder {
             width: 100%;
             height: 500px;
@@ -185,19 +184,7 @@
             background-image: radial-gradient(var(--green-light) 2px, transparent 2px);
             background-size: 20px 20px;
         }
-        .video-placeholder:hover {
-            transform: scale(1.02);
-            color: var(--carrot);
-        }
-        .play-btn {
-            background: var(--carrot);
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 2em; margin-bottom: 20px;
-        }
 
-        /* МАСТЕР */
         .master-image {
             width: 100%;
             height: 600px;
@@ -208,142 +195,105 @@
             box-shadow: -20px 20px 0px var(--carrot);
         }
 
-        /* НОВЫЙ ПОДВАЛ - POSTER GRID */
-        .footer-section { 
-            background-color: var(--green-dark); 
-            color: var(--white); 
-            padding: 100px 0 60px 0;
-            border-top: 1px solid rgba(232, 93, 4, 0.2);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 80px;
-        }
-
-        .org-info { display: flex; flex-direction: column; gap: 40px; }
+        /* ПОДВАЛ */
+        .footer-section { background-color: var(--green-dark); color: var(--white); padding: 100px 0; }
         
-        .info-item { display: flex; flex-direction: column; gap: 8px; }
-        .info-label { 
-            font-size: 0.75em; 
-            color: var(--carrot); 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 3px;
-        }
-        .info-value { 
-            font-size: 1.4em; 
-            font-weight: 400; 
-            text-transform: uppercase; 
-            line-height: 1.2;
-        }
-        .info-value strong { font-weight: 900; }
-
-        /* БЛОК С КУАР-КОДАМИ */
-        .connect-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .qr-group { display: flex; gap: 15px; }
-        
-        .qr-card {
-            width: 85px;
-            height: 85px;
-            background: var(--white);
-            padding: 5px;
-            border-radius: 12px;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: block;
-        }
-        .qr-card:hover { transform: scale(1.1) rotate(3deg); }
-        .qr-card img { width: 100%; height: 100%; object-fit: contain; }
-
-        .connect-text {
-            font-size: 0.85em;
-            line-height: 1.4;
+        .print-style-text {
+            font-family: 'Courier New', Courier, monospace;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.7);
+            letter-spacing: 2px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+            border-left: 2px solid var(--carrot);
+            padding-left: 25px;
+            margin-top: 20px;
+            line-height: 1.8;
         }
-        .connect-text span { color: var(--carrot); font-weight: 800; display: block; margin-bottom: 5px;}
+        .print-style-text strong { color: var(--white); font-weight: normal;}
 
-        /* ПРАВАЯ КАРТОЧКА БРОНИ */
+        /* БЛОК ОПЛАТЫ (КАРТОЧКА) */
         .booking-card {
             background: var(--white);
             color: var(--green-dark);
             padding: 40px;
             border-radius: 40px;
-            height: fit-content;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
         }
-        
         .booking-card h2 { color: var(--green-dark); margin-bottom: 30px; }
-        
-        .price-table { width: 100%; margin-bottom: 40px; }
-        .price-row {
+
+        .price-list { list-style: none; padding: 0; }
+        .price-list li {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(27, 42, 33, 0.1);
             display: flex;
             justify-content: space-between;
+            font-size: 1.1em;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(27, 42, 33, 0.1);
         }
-        .price-row:last-child { border: none; }
-        .price-name { font-weight: 400; font-size: 0.95em; }
-        .price-val { font-weight: 900; color: var(--carrot); font-size: 1.2em; }
+        .price-list span { font-weight: 900; color: var(--carrot); font-size: 1.3em; }
 
-        .btn-full { width: 100%; box-sizing: border-box; }
-
-        /* ИНФОРМАЦИОННЫЕ ПАРТНЕРЫ */
-        .partners-footer {
-            margin-top: 100px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        /* QR-БЛОК (БОЛЬШЕ) */
+        .connect-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 40px;
         }
-        .partners-list {
+        .qr-group { display: flex; gap: 20px; }
+        .qr-card {
+            width: 100px; /* Увеличено */
+            height: 100px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: 12px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .qr-card:hover { transform: scale(1.05); }
+        .qr-card img { width: 100%; height: 100%; object-fit: contain; }
+
+        .connect-text { font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); }
+        .connect-text strong { display: block; color: var(--carrot); margin-bottom: 5px; }
+
+        /* ПАРТНЕРЫ */
+        .partners-grid {
+            margin-top: 80px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 30px;
-            opacity: 0.4;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
-        .partner-logo {
+        .partner-circle {
             width: 70px;
             height: 70px;
-            border: 1px dashed var(--white);
+            border: 1px dashed rgba(255,255,255,0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.55em;
+            font-size: 0.6em;
+            color: rgba(255,255,255,0.3);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
         }
-        .partner-logo:hover { border-style: solid; border-color: var(--carrot); opacity: 1; color: var(--carrot); }
 
-        /* Адаптив */
         @media (max-width: 768px) {
             h1 { font-size: 2.8em; }
             h2 { font-size: 2em; }
             .hero-top-bar { position: relative; top: 0; padding: 0; flex-direction: column; gap: 25px; margin-bottom: 40px; align-items: center; }
-            .location-block { text-align: center; flex-direction: column-reverse; }
-            .footer-grid { grid-template-columns: 1fr; gap: 50px; }
+            .location-block { text-align: center; justify-content: center; flex-direction: column-reverse; }
+            .flex-row { flex-direction: column; gap: 40px; }
             .connect-box { flex-direction: column; text-align: center; }
-            .info-value { font-size: 1.2em; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HERO -->
     <header class="hero">
         <div class="hero-top-bar">
             <div class="date-block">
@@ -361,60 +311,75 @@
                 ТЦ «Счастье» <br>[Белинского, 124]
             </div>
         </div>
-
         <div class="container">
             <div class="subtitle">Оксана Киреева (Москва)</div>
             <h1>ART BODY<br>FLOW</h1>
             <p class="hero-tagline">Искусство владения телом.<br>Хатха-йога <strong>×</strong> Animal Flow</p>
+            <p style="font-size: 1.1em; font-weight: 300; max-width: 600px; margin: 0 auto 40px auto; color: rgba(255, 255, 255, 0.6);">Однодневный углубленный семинар-практикум.</p>
             <a href="#booking" class="btn">ЗАБРОНИРОВАТЬ МЕСТО</a>
         </div>
     </header>
 
-    <!-- МЕТОД -->
     <section class="container">
         <div class="flex-row">
             <div class="flex-half">
                 <h2>О методе</h2>
-                <p><strong>Art Body Flow</strong> — авторское направление, созданное на основе 15-летней практики хатха-йоги и Animal Flow. Мы расширим вашу библиотеку движений и выведем владение телом на новый уровень.</p>
+                <p><strong>Art Body Flow</strong> — это авторское направление, бережно созданное на основе 15-летней практики и преподавания хатха-йоги, хореографии и метода Animal Flow.</p>
+                <p>Полученные знания позволят кардинально расширить вашу библиотеку движений и повысить уровень владения телом. Ваши личные практики и классы для учеников обретут качественно новый уровень.</p>
+                <p>Вы научитесь составлять бесконечно уникальные последовательности элементов, работая в разных плоскостях.</p>
             </div>
             <div class="flex-half">
                 <div class="video-placeholder">
-                    <div style="text-align: center;"><div class="play-btn">▶</div>СМОТРЕТЬ ВИДЕО</div>
+                    <div style="text-align: center;"><div class="play-btn" style="background: var(--carrot); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2em; margin: 0 auto 20px auto; color: white;">▶</div>СМОТРЕТЬ ВИДЕО МЕТОДА</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ПРОГРАММА -->
     <section class="bg-white">
         <div class="container">
-            <h2>Программа</h2>
+            <h2>Программа практикума</h2>
             <div class="flex-row" style="align-items: flex-start;">
                 <div class="flex-half">
+                    <p style="font-weight: 600; margin-bottom: 30px; color: var(--green-dark);">На нашем интенсивном однодневном семинаре вы изучите на практике:</p>
                     <ul class="editorial-list">
-                        <li>Элементы Animal Flow 1 и 2 уровней.</li>
-                        <li>Глубокая мобилизация суставов.</li>
-                        <li>Асаны нелинейной 3D-йоги.</li>
-                        <li>Нижние балансы на руках.</li>
+                        <li>Все элементы направления Animal Flow 1-го и частично 2-го уровня.</li>
+                        <li>Уникальные разминочные комплексы для глубокой мобилизации тазобедренных и плечевых суставов.</li>
+                        <li>Асаны из нелинейной 3D-йоги, работающей в разных направлениях движения и плоскостях.</li>
+                        <li>Нестатические асаны виньяса-йоги с переходами из одной позы в другую с интеграцией элементов Animal Flow.</li>
+                        <li>Нижние балансы на руках — детальный разбор и ключи к их уверенному освоению.</li>
                     </ul>
                 </div>
                 <div class="flex-half">
                     <div class="highlight-box">
-                        <h3>Артефакты</h3>
-                        <p>Подробная методичка и профессиональная видеозапись ваших связок включены в стоимость.</p>
+                        <h3 style="margin-bottom: 5px;">Артефакты семинара</h3>
+                        <p style="font-size: 0.95em; color: #555;">В результате прохождения курса каждый участник заберет с собой:</p>
+                        <ul class="editorial-list" style="margin-top: 20px;">
+                            <li><strong>Подробную методичку</strong> со всеми движениями практикума для внедрения в свои классы.</li>
+                            <li><strong>Профессиональную видеозапись</strong> ваших уникальных движений и связок Art Body Flow.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- МАСТЕР -->
     <section class="container">
         <h2>Мастер курса</h2>
         <div class="flex-row">
             <div class="flex-half">
-                <h3>Оксана Киреева</h3>
-                <p>Опыт преподавания — 17 лет. Сертифицированный мастер Универсальной йоги и метода Animal Flow.</p>
+                <h3 style="margin-bottom: 5px;">Оксана Киреева</h3>
+                <p style="color: var(--carrot); font-weight: 800; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px;">Город Москва</p>
+                <p>Автор методики Art Body Flow. Опыт личной практики — более 20 лет, опыт преподавания — 17 лет.</p>
+                <ul class="editorial-list" style="margin-top: 30px; font-size: 0.95em;">
+                    <li>Сертифицированный инструктор Универсальной йоги А. В. Лаппа</li>
+                    <li>Сертифицированный преподаватель метода Animal Flow</li>
+                    <li>Выпускница курса Йогатерапии Артема Фролова</li>
+                    <li>Курсы для преподавателей «Культура движения» Игоря Пантюшева</li>
+                    <li>Gray Institute: CAFS Paul Edmondson</li>
+                    <li>Академия Кинезиологии, курс «Кинезиомассаж»</li>
+                    <li>Участник обучающих семинаров центра «Анатомия»</li>
+                </ul>
             </div>
             <div class="flex-half">
                 <div class="master-image"></div>
@@ -422,23 +387,20 @@
         </div>
     </section>
 
-    <!-- ФУТЕР (ОРГАНИЗАЦИЯ И ОПЛАТА) -->
+    <!-- ОРГАНИЗАЦИЯ И ОПЛАТА -->
     <section id="booking" class="footer-section">
         <div class="container">
-            <div class="footer-grid">
+            <div class="flex-row" style="align-items: flex-start;">
                 
-                <!-- ИНФО -->
-                <div class="org-info">
-                    <h2 style="color: var(--carrot); margin-bottom: 10px;">Организация</h2>
-                    
-                    <div class="info-item">
-                        <div class="info-label">Когда / Time</div>
-                        <div class="info-value">26 Апреля <strong>11:00 — 15:00</strong></div>
-                    </div>
-
-                    <div class="info-item">
-                        <div class="info-label">Где / Place</div>
-                        <div class="info-value">Real Dance Project<br>Нижний Новгород, Белинского, 124</div>
+                <div class="flex-half">
+                    <h2 style="color: var(--carrot);">Организация</h2>
+                    <div class="print-style-text">
+                        // DATE & TIME<br>
+                        <strong>26 АПРЕЛЯ / 11:00 — 15:00</strong><br><br>
+                        // LOCATION<br>
+                        <strong>Real Dance Project</strong><br>
+                        НИЖНИЙ НОВГОРОД<br>
+                        УЛ.БЕЛИНСКОГО, 124 [ТЦ "Счастье", 4 этаж]
                     </div>
 
                     <!-- CONNECT BOX -->
@@ -448,58 +410,44 @@
                                 <img src="https://i.ibb.co/VWj5t9vW/telega.png" alt="Telegram">
                             </a>
                             <a href="https://vk.com/art_body_flow" target="_blank" class="qr-card">
-                                <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" alt="VK">
+                                <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" alt="VKontakte">
                             </a>
                         </div>
                         <div class="connect-text">
-                            <span>Узнать подробности</span>
-                            Наведи камеру на QR или кликни <br>для перехода в сообщество
+                            <strong>УЗНАТЬ ПОДРОБНОСТИ</strong>
+                            НАВЕДИ КАМЕРУ НА QR ИЛИ КЛИКНИ <br>ДЛЯ ПЕРЕХОДА В СООБЩЕСТВО
                         </div>
                     </div>
                 </div>
 
-                <!-- КАРТОЧКА ОПЛАТЫ -->
-                <div class="booking-card">
-                    <h2>Участие</h2>
-                    <div class="price-table">
-                        <div class="price-row">
-                            <div class="price-name">Early birds (до 17 апреля)</div>
-                            <div class="price-val">4,300 ₽</div>
-                        </div>
-                        <div class="price-row">
-                            <div class="price-name">С 17 по 26 апреля</div>
-                            <div class="price-val">5,000 ₽</div>
-                        </div>
-                        <div class="price-row">
-                            <div class="price-name">В день мероприятия</div>
-                            <div class="price-val">5,300 ₽</div>
+                <div class="flex-half">
+                    <div class="booking-card">
+                        <h2>Участие</h2>
+                        <ul class="price-list">
+                            <li>Early birds (до 17 апреля) <span>4,300 ₽</span></li>
+                            <li>С 17 по 26 апреля <span>5,000 ₽</span></li>
+                            <li>В день мероприятия <span>5,300 ₽</span></li>
+                        </ul>
+                        <div style="margin-top: 40px; text-align: right;">
+                            <a href="#" class="btn" style="width: 100%; box-sizing: border-box;" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
+                            <p style="font-size: 0.7em; color: #888; margin-top: 15px; text-align: center; text-transform: uppercase;">Регистрация через систему Timepad</p>
                         </div>
                     </div>
-
-                    <!-- Виджет Timepad -->
-                    <a href="#" class="btn btn-full" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
-                    <p style="font-size: 0.7em; color: #888; margin-top: 20px; text-align: center; text-transform: uppercase; letter-spacing: 1px;">Регистрация через систему Timepad</p>
                 </div>
+
             </div>
 
-            <!-- ИНФОРМАЦИОННЫЕ ПАРТНЕРЫ -->
-            <div class="partners-footer">
-                <p style="text-align: center; font-size: 0.7em; letter-spacing: 4px; color: rgba(255,255,255,0.3); margin-bottom: 30px; text-transform: uppercase;">Информационные партнеры</p>
-                <div class="partners-list">
-                    <div class="partner-logo">Logo</div>
-                    <div class="partner-logo">Logo</div>
-                    <div class="partner-logo">Logo</div>
-                    <div class="partner-logo">Logo</div>
-                    <div class="partner-logo">Logo</div>
-                    <div class="partner-logo">Logo</div>
-                    <div class="partner-logo">Logo</div>
-                </div>
+            <!-- ПАРТНЕРЫ -->
+            <div class="partners-grid">
+                <div class="partner-circle">Logo</div>
+                <div class="partner-circle">Logo</div>
+                <div class="partner-circle">Logo</div>
+                <div class="partner-circle">Logo</div>
+                <div class="partner-circle">Logo</div>
             </div>
         </div>
     </section>
 
-    <!-- Timepad Loader Script -->
     <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440"></script>
-
 </body>
 </html>
