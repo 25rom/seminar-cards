@@ -60,7 +60,7 @@
         h3 { font-size: 1.3em; font-weight: 800; letter-spacing: 1px; color: var(--green-dark); }
         p { font-size: 1.1em; font-weight: 400; margin-bottom: 20px; }
 
-        /* СОВРЕМЕННАЯ КНОПКА */
+        /* СОВРЕМЕННАЯ КНОПКА (Органика, скругления, морковный цвет) */
         .btn {
             display: inline-block;
             background-color: var(--carrot);
@@ -71,9 +71,9 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             border: none;
-            border-radius: 50px;
+            border-radius: 50px; /* Полное скругление! */
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Эффект пружинки */
             text-align: center;
             box-shadow: 0 10px 20px rgba(232, 93, 4, 0.2);
         }
@@ -84,10 +84,11 @@
             box-shadow: 0 15px 25px rgba(232, 93, 4, 0.4);
         }
 
-        /* ГЛАВНЫЙ ЭКРАН */
+        /* ГЛАВНЫЙ ЭКРАН: АБСТРАКЦИЯ + ЗЕЛЕНЫЙ ФОН */
         .hero {
             position: relative;
             background-color: var(--green-dark);
+            /* Паттерн: первобытные черточки, штрихи и круги (написано на SVG в base64) */
             background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232c4234' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23E85D04' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23E85D04' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
             color: var(--white);
             padding: 180px 20px 120px 20px;
@@ -103,6 +104,7 @@
 
         .hero .container { position: relative; z-index: 2; }
 
+        /* ШАПКА ПОСТЕРА НА ХИРО */
         .hero-top-bar {
             position: absolute;
             top: 40px;
@@ -126,7 +128,7 @@
         .location-details { display: flex; flex-direction: column; justify-content: center; }
         .location-title { font-size: 1.1em; font-weight: 800; color: var(--white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         .location-city { font-size: 0.85em; font-weight: 600; color: var(--carrot); text-transform: uppercase; letter-spacing: 1px; }
-
+        
         .hero .subtitle {
             font-size: 1.2em; font-weight: 600; letter-spacing: 3px;
             color: var(--carrot); margin-bottom: 10px; text-transform: uppercase;
@@ -138,6 +140,7 @@
         }
         .hero-tagline strong { color: var(--carrot); font-weight: 600; margin: 0 5px; }
 
+        /* СПИСКИ */
         .editorial-list { list-style: none; padding: 0; margin: 0; }
         .editorial-list li {
             position: relative;
@@ -155,6 +158,7 @@
             border-radius: 5px;
         }
 
+        /* БЛОКИ И СЕТКА */
         .bg-white { background-color: var(--white); }
         .flex-row { display: flex; gap: 60px; flex-wrap: wrap; align-items: center; }
         .flex-half { flex: 1; min-width: 300px; }
@@ -167,6 +171,7 @@
             background-color: rgba(44, 66, 52, 0.03);
         }
 
+        /* ВИДЕО-ЗАГЛУШКА (Скругленная) */
         .video-placeholder {
             width: 100%;
             height: 500px;
@@ -181,25 +186,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 20px 40px rgba(27, 42, 33, 0.2);
+            /* Паттерн для красоты */
             background-image: radial-gradient(var(--green-light) 2px, transparent 2px);
             background-size: 20px 20px;
         }
 
+        /* ФОТО МАСТЕРА (foto3) */
         .master-image {
             width: 100%;
             height: 600px;
+            /* Автоматически грузит фото по вашей ссылке */
             background-image: url('https://i.postimg.cc/HJvNZWZy/foto3.png');
             background-size: cover;
             background-position: center;
             border-radius: 40px;
-            box-shadow: -20px 20px 0px var(--carrot);
+            box-shadow: -20px 20px 0px var(--carrot); /* Стильная тень */
         }
 
-        /* ПОДВАЛ */
-        .footer-section { background-color: var(--green-dark); color: var(--white); padding: 100px 0; }
+        /* ПОДВАЛ И ОРГАНИЗАЦИЯ */
+        .footer-section { background-color: var(--green-dark); color: var(--white); padding: 90px 0; }
         
+        /* Типографика постера (Печатный стиль) */
         .print-style-text {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace; /* Печатный моноширинный шрифт */
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 0.9em;
@@ -211,7 +220,7 @@
         }
         .print-style-text strong { color: var(--white); font-weight: normal;}
 
-        /* БЛОК ОПЛАТЫ (КАРТОЧКА) */
+        /* СТИЛЬ КАРТОЧКИ ЦЕН */
         .booking-card {
             background: var(--white);
             color: var(--green-dark);
@@ -219,81 +228,70 @@
             border-radius: 40px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
         }
-        .booking-card h2 { color: var(--green-dark); margin-bottom: 30px; }
+        .booking-card h2 { color: var(--green-dark); margin-bottom: 25px; }
 
-        .price-list { list-style: none; padding: 0; }
+        .price-list { list-style: none; padding: 0; border-top: 1px solid rgba(27,42,33,0.1); }
         .price-list li {
             padding: 20px 0;
-            border-bottom: 1px solid rgba(27, 42, 33, 0.1);
+            border-bottom: 1px solid rgba(27,42,33,0.1);
             display: flex;
             justify-content: space-between;
             font-size: 1.1em;
             align-items: center;
         }
-        .price-list span { font-weight: 900; color: var(--carrot); font-size: 1.3em; }
-
-        /* QR-БЛОК (БОЛЬШЕ) */
-        .connect-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 30px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-top: 40px;
+        .price-list span {
+            font-weight: 800;
+            color: var(--carrot);
+            font-size: 1.3em;
         }
-        .qr-group { display: flex; gap: 20px; }
-        .qr-card {
-            width: 100px; /* Увеличено */
-            height: 100px;
-            background: var(--white);
-            padding: 8px;
-            border-radius: 12px;
+
+        /* QR СЕКЦИЯ */
+        .qr-section { display: flex; align-items: center; gap: 30px; margin-top: 50px; }
+        .qr-item-link {
             display: block;
+            width: 100px; height: 100px;
+            background: #fff;
+            padding: 5px;
+            border-radius: 12px;
             transition: transform 0.3s ease;
         }
-        .qr-card:hover { transform: scale(1.05); }
-        .qr-card img { width: 100%; height: 100%; object-fit: contain; }
-
-        .connect-text { font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); }
-        .connect-text strong { display: block; color: var(--carrot); margin-bottom: 5px; }
+        .qr-item-link:hover { transform: scale(1.05); }
+        .qr-item-link img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .qr-info-text { font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+        .qr-info-text strong { color: var(--carrot); display: block; margin-bottom: 5px; }
 
         /* ПАРТНЕРЫ */
-        .partners-grid {
-            margin-top: 80px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
+        .partners-footer {
+            margin-top: 100px;
             padding-top: 40px;
             border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .partner-circle {
-            width: 70px;
-            height: 70px;
-            border: 1px dashed rgba(255,255,255,0.3);
-            border-radius: 50%;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 0.6em;
-            color: rgba(255,255,255,0.3);
-            text-transform: uppercase;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .partner-dot {
+            width: 65px; height: 65px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6em; color: rgba(255,255,255,0.2); text-transform: uppercase;
         }
 
+        /* Адаптив */
         @media (max-width: 768px) {
             h1 { font-size: 2.8em; }
             h2 { font-size: 2em; }
             .hero-top-bar { position: relative; top: 0; padding: 0; flex-direction: column; gap: 25px; margin-bottom: 40px; align-items: center; }
-            .location-block { text-align: center; justify-content: center; flex-direction: column-reverse; }
-            .flex-row { flex-direction: column; gap: 40px; }
-            .connect-box { flex-direction: column; text-align: center; }
+            .location-block { text-align: center; justify-content: center; flex-direction: column-reverse; gap: 10px; }
+            .qr-section { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ГЛАВНЫЙ ЭКРАН -->
     <header class="hero">
         <div class="hero-top-bar">
             <div class="date-block">
@@ -311,6 +309,7 @@
                 ТЦ «Счастье» <br>[Белинского, 124]
             </div>
         </div>
+
         <div class="container">
             <div class="subtitle">Оксана Киреева (Москва)</div>
             <h1>ART BODY<br>FLOW</h1>
@@ -320,6 +319,7 @@
         </div>
     </header>
 
+    <!-- О НАПРАВЛЕНИИ -->
     <section class="container">
         <div class="flex-row">
             <div class="flex-half">
@@ -330,12 +330,16 @@
             </div>
             <div class="flex-half">
                 <div class="video-placeholder">
-                    <div style="text-align: center;"><div class="play-btn" style="background: var(--carrot); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2em; margin: 0 auto 20px auto; color: white;">▶</div>СМОТРЕТЬ ВИДЕО МЕТОДА</div>
+                    <div style="text-align: center;">
+                        <div class="play-btn" style="background: var(--carrot); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2em; margin: 0 auto 20px auto; color: white;">▶</div>
+                        СМОТРЕТЬ ВИДЕО МЕТОДА
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ПРОГРАММА СЕМИНАРА -->
     <section class="bg-white">
         <div class="container">
             <h2>Программа практикума</h2>
@@ -364,9 +368,10 @@
         </div>
     </section>
 
+    <!-- ОБ АВТОРЕ -->
     <section class="container">
         <h2>Мастер курса</h2>
-        <div class="flex-row">
+        <div class="flex-row" style="align-items: center;">
             <div class="flex-half">
                 <h3 style="margin-bottom: 5px;">Оксана Киреева</h3>
                 <p style="color: var(--carrot); font-weight: 800; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px;">Город Москва</p>
@@ -392,6 +397,7 @@
         <div class="container">
             <div class="flex-row" style="align-items: flex-start;">
                 
+                <!-- ЛЕВАЯ КОЛОНКА -->
                 <div class="flex-half">
                     <h2 style="color: var(--carrot);">Организация</h2>
                     <div class="print-style-text">
@@ -403,51 +409,54 @@
                         УЛ.БЕЛИНСКОГО, 124 [ТЦ "Счастье", 4 этаж]
                     </div>
 
-                    <!-- CONNECT BOX -->
-                    <div class="connect-box">
-                        <div class="qr-group">
-                            <a href="https://t.me/abf_2604" target="_blank" class="qr-card">
+                    <!-- QR СЕКЦИЯ -->
+                    <div class="qr-section">
+                        <div class="qr-group" style="display: flex; gap: 15px;">
+                            <a href="https://t.me/abf_2604" target="_blank" class="qr-item-link">
                                 <img src="https://i.ibb.co/VWj5t9vW/telega.png" alt="Telegram">
                             </a>
-                            <a href="https://vk.com/art_body_flow" target="_blank" class="qr-card">
+                            <a href="https://vk.com/art_body_flow" target="_blank" class="qr-item-link">
                                 <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" alt="VKontakte">
                             </a>
                         </div>
-                        <div class="connect-text">
-                            <strong>УЗНАТЬ ПОДРОБНОСТИ</strong>
-                            НАВЕДИ КАМЕРУ НА QR ИЛИ КЛИКНИ <br>ДЛЯ ПЕРЕХОДА В СООБЩЕСТВО
+                        <div class="qr-info-text">
+                            <strong>Узнать подробности</strong>
+                            Наведи камеру на QR или кликни <br>для перехода в сообщество
                         </div>
                     </div>
                 </div>
 
+                <!-- ПРАВАЯ КОЛОНКА -->
                 <div class="flex-half">
                     <div class="booking-card">
-                        <h2>Участие</h2>
+                        <h2 style="color: var(--white);">Участие</h2>
                         <ul class="price-list">
                             <li>Early birds (до 17 апреля) <span>4,300 ₽</span></li>
                             <li>С 17 по 26 апреля <span>5,000 ₽</span></li>
                             <li>В день мероприятия <span>5,300 ₽</span></li>
                         </ul>
-                        <div style="margin-top: 40px; text-align: right;">
+                        <div style="margin-top: 40px; text-align: center;">
                             <a href="#" class="btn" style="width: 100%; box-sizing: border-box;" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
-                            <p style="font-size: 0.7em; color: #888; margin-top: 15px; text-align: center; text-transform: uppercase;">Регистрация через систему Timepad</p>
+                            <p style="font-size: 0.8em; color: #888; margin-top: 20px; text-transform: uppercase; font-weight: 600;">Предварительная регистрация обязательна!</p>
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <!-- ПАРТНЕРЫ -->
-            <div class="partners-grid">
-                <div class="partner-circle">Logo</div>
-                <div class="partner-circle">Logo</div>
-                <div class="partner-circle">Logo</div>
-                <div class="partner-circle">Logo</div>
-                <div class="partner-circle">Logo</div>
+            <div class="partners-footer">
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
             </div>
         </div>
     </section>
 
+    <!-- Timepad Widget Script -->
     <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440"></script>
 </body>
 </html>
