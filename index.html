@@ -140,19 +140,56 @@
 
         .master-image { width: 100%; height: 600px; background-image: url('https://i.postimg.cc/HJvNZWZy/foto3.png'); background-size: cover; background-position: center; border-radius: 40px; box-shadow: -20px 20px 0px var(--carrot); }
 
-        .footer-section { background-color: var(--green-dark); color: var(--white); padding: 90px 0; }
-        .print-style-text { font-family: 'Courier New', Courier, monospace; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9em; color: rgba(255, 255, 255, 0.6); border-left: 2px solid var(--carrot); padding-left: 15px; margin-top: 20px; line-height: 1.8; }
+        /* ПОДВАЛ */
+        .footer-section { background-color: var(--green-dark); color: var(--white); padding: 100px 0; }
+        
+        .print-style-text {
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+            border-left: 2px solid var(--carrot);
+            padding-left: 25px;
+            margin-top: 20px;
+            line-height: 1.8;
+        }
         .print-style-text strong { color: var(--white); font-weight: normal;}
 
         .price-list { list-style: none; padding: 0; border-top: 1px solid rgba(27, 42, 33, 0.1); }
-        .price-list li { padding: 20px 0; border-bottom: 1px solid rgba(27, 42, 33, 0.1); display: flex; justify-content: space-between; font-size: 1.1em; align-items: center; }
-        .price-list span { font-weight: 800; color: var(--carrot); font-size: 1.3em; }
+        .price-list li {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(27, 42, 33, 0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1em;
+            align-items: center;
+        }
+        .price-list span { font-weight: 900; color: var(--carrot); font-size: 1.3em; }
+
+        /* ПАРТНЕРЫ */
+        .partners-footer {
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .partner-dot {
+            width: 70px; height: 70px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6em; color: rgba(255,255,255,0.2);
+        }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.8em; }
             h2 { font-size: 2em; }
             .hero-top-bar { position: relative; top: 0; padding: 0; flex-direction: column; gap: 25px; margin-bottom: 40px; align-items: center; }
-            .location-block { text-align: center; justify-content: center; flex-direction: column-reverse; gap: 10px; }
+            .location-block { text-align: center; flex-direction: column-reverse; }
             .flex-row { flex-direction: column; gap: 40px; }
         }
     </style>
@@ -189,7 +226,7 @@
             </div>
             <div class="flex-half">
                 <div class="video-placeholder">
-                    <div style="text-align: center;"><div class="play-btn" style="color: white; margin: 0 auto 20px auto;">▶</div>СМОТРЕТЬ ВИДЕО МЕТОДА</div>
+                    <div style="text-align: center;"><div class="play-btn" style="background: var(--carrot); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2em; margin: 0 auto 20px auto; color: white;">▶</div>СМОТРЕТЬ ВИДЕО МЕТОДА</div>
                 </div>
             </div>
         </div>
@@ -244,9 +281,11 @@
         </div>
     </section>
 
+    <!-- ПОДВАЛ -->
     <section id="booking" class="footer-section">
         <div class="container">
             <div class="flex-row" style="align-items: flex-start;">
+                
                 <!-- ОРГАНИЗАЦИЯ -->
                 <div class="flex-half">
                     <h2 style="color: var(--carrot);">Организация</h2>
@@ -256,9 +295,10 @@
                         // LOCATION<br>
                         <strong>Real Dance Project</strong><br>
                         НИЖНИЙ НОВГОРОД<br>
-                        УЛ.БЕЛИНСКОГО, 124 [ТЦ "Счастье", 4 этаж]
+                        УЛ.БЕЛИНСКОГО, 124 [ТЦ "СЧАСТЬЕ", 4 ЭТАЖ]
                     </div>
-                    <!-- QR-БЛОК -->
+
+                    <!-- QR И СОЦСЕТИ -->
                     <div style="display: flex; align-items: center; gap: 25px; margin-top: 50px;">
                         <div style="display: flex; gap: 15px;">
                             <a href="https://t.me/abf_2604" target="_blank" style="display: block; width: 110px; height: 110px; background: #fff; padding: 5px; border-radius: 12px;">
@@ -268,18 +308,17 @@
                                 <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" style="width: 100%; height: 100%; object-fit: contain;">
                             </a>
                         </div>
-                        <div style="font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7);">
+                        <div style="font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); line-height: 1.4;">
                             <strong style="color: var(--carrot); display: block; margin-bottom: 5px;">Узнать подробности</strong>
-                            Наведи камеру на QR или кликни <br>для перехода в сообщество
+                            Наведи камеру на QR <br>или кликни для перехода <br>в сообщество
                         </div>
                     </div>
                 </div>
 
-                <!-- УЧАСТИЕ (БЕЛАЯ КАРТОЧКА) -->
+                <!-- КАРТОЧКА УЧАСТИЯ -->
                 <div class="flex-half">
-                    <div style="background: var(--white); color: var(--green-dark); padding: 40px; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.3);">
-                        <h2 style="color: var(--green-dark);">Участие</h2>
-                        <p style="color: rgba(27,42,33,0.6); margin-bottom: 30px;">Предварительная регистрация обязательна. Количество мест ограничено вместимостью зала для комфортной практики</p>
+                    <div style="background: var(--white); color: var(--green-dark); padding: 45px; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
+                        <h2 style="color: var(--green-dark); margin-bottom: 25px;">Участие</h2>
                         <ul class="price-list">
                             <li>Early birds (до 17 апреля) <span>4,300 ₽</span></li>
                             <li>С 17 по 26 апреля <span>5,000 ₽</span></li>
@@ -287,25 +326,26 @@
                         </ul>
                         <div style="margin-top: 40px; text-align: center;">
                             <a href="#" class="btn" style="width: 100%; box-sizing: border-box;" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
-                            <p style="font-size: 0.9em; color: var(--carrot); margin-top: 20px; text-transform: uppercase; font-weight: 800;">Предварительная регистрация обязательна!</p>
+                            <p style="font-size: 0.85em; color: #888; margin-top: 20px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">Предварительная регистрация обязательна!</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ПАРТНЕРЫ -->
-            <div style="margin-top: 100px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
-                <div style="width: 70px; height: 70px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: rgba(255,255,255,0.2);">Logo</div>
+            <!-- СЕТКА ПАРТНЕРОВ -->
+            <div class="partners-footer">
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
+                <div class="partner-dot">Logo</div>
             </div>
         </div>
     </section>
 
+    <!-- Timepad Widget Script -->
     <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440"></script>
 </body>
 </html>
