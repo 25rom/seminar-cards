@@ -452,7 +452,7 @@
 
             </div>
 
-            <div class="flex-half">
+           <div class="flex-half">
                 <h2 style="color: var(--white);">Участие</h2>
                 <p style="color: rgba(255,255,255,0.6); margin-bottom: 30px;">Предварительная регистрация обязательна. Количество мест ограничено вместимостью зала для комфортной практики</p>
                 
@@ -463,11 +463,13 @@
                 </ul>
 
                 <div style="margin-top: 40px;">
-                    <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: data-timepad-widget-v2="event_register" -->
-                    <a href="#booking" class="btn" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
+                    <!-- Твоя оригинальная кнопка с вшитыми триггерами Таймпада -->
+                    <a href="#booking" class="btn" data-timepad-customized="376266" data-twf2s-event--id="3904440" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
+                    
+                    <!-- Невидимый скрипт, который заставляет кнопку выше открывать виджет -->
+                    <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js"></script>
                 </div>
             </div>
-        </div>
 
         <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: Сетка партнеров -->
         <div class="container" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
@@ -480,9 +482,5 @@
             <div class="partner-circle"></div>
         </div>
     </section>
-
-    <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: Скрипт Timepad -->
-    <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440" data-timepad-widget-v2="event_register"></script>
-
 </body>
 </html>
