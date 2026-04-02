@@ -254,6 +254,49 @@
             font-size: 1.3em;
         }
 
+        /* СТИЛИ ДЛЯ QR-КОДОВ */
+        .social-qr-wrapper {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .qr-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .qr-image-link {
+            flex-shrink: 0;
+            display: block;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--carrot);
+            transition: transform 0.3s ease;
+        }
+        .qr-image-link:hover {
+            transform: scale(1.1);
+        }
+        .qr-image-link img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .qr-description {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.2;
+        }
+        .qr-description strong {
+            display: block;
+            color: var(--carrot);
+            margin-bottom: 4px;
+        }
+
         /* Адаптив */
         @media (max-width: 768px) {
             h1 { font-size: 2.8em; }
@@ -269,6 +312,7 @@
             .date-block, .location-block { text-align: center; justify-content: center; }
             .location-block { flex-direction: column-reverse; gap: 10px; }
             .price-list li { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .qr-item { justify-content: flex-start; }
         }
     </style>
 </head>
@@ -310,7 +354,7 @@
                 Однодневный углубленный семинар-практикум.
             </p>
 
-            <a href="#booking" class="btn">РЕГИСТРАЦИЯ</a>
+            <a href="#booking" class="btn">ЗАБРОНИРОВАТЬ МЕСТО</a>
         </div>
     </header>
 
@@ -399,7 +443,7 @@
             <div class="flex-half">
                 <h2 style="color: var(--carrot);">Организация</h2>
                 
-                <!-- ПЕЧАТНЫЙ СТИЛЬ ОРГАНИЗАЦИИ (КАК НА ПОСТЕРАХ) -->
+                <!-- ПЕЧАТНЫЙ СТИЛЬ ОРГАНИЗАЦИИ -->
                 <div class="print-style-text">
                     // DATE & TIME<br>
                     <strong>26 АПРЕЛЯ / 11:00 — 15:00</strong><br><br>
@@ -409,11 +453,33 @@
                     НИЖНИЙ НОВГОРОД<br>
                     УЛ.БЕЛИНСКОГО, 124 [ТЦ "Счастье", 4 этаж]
                 </div>
+
+                <!-- БЛОК С КУАР-КОДАМИ -->
+                <div class="social-qr-wrapper">
+                    <div class="qr-item">
+                        <a href="https://ibb.co/BVzFt3gV" class="qr-image-link" target="_blank">
+                            <img src="https://i.ibb.co/VWj5t9vW/telega.png" alt="Telegram QR">
+                        </a>
+                        <div class="qr-description">
+                            <strong>Telegram</strong>
+                            вступить в сообщество
+                        </div>
+                    </div>
+                    <div class="qr-item">
+                        <a href="https://ibb.co/Mq2FxDV" class="qr-image-link" target="_blank">
+                            <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" alt="VKontakte QR">
+                        </a>
+                        <div class="qr-description">
+                            <strong>Vkontakte</strong>
+                            узнать подробности
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="flex-half">
                 <h2 style="color: var(--white);">Участие</h2>
-                <p style="color: rgba(255,255,255,0.6); margin-bottom: 30px;">Количество мест строго ограничено вместимостью зала для комфортной практики.</p>
+                <p style="color: rgba(255,255,255,0.6); margin-bottom: 30px;">Предварительная регистрация обязательна. Количество мест ограничено вместимостью зала для комфортной практики</p>
                 
                 <ul class="price-list">
                     <li>Early birds (до 17 апреля) <span>4,300 ₽</span></li>
@@ -422,12 +488,15 @@
                 </ul>
 
                 <div style="margin-top: 40px;">
-                    <!-- ВСТАВЬТЕ ССЫЛКУ НА ОПЛАТУ ЗДЕСЬ -->
-                    <a href="#booking" class="btn">ЗАБРОНИРОВАТЬ МЕСТО</a>
+                    <!-- ВТОРАЯ КНОПКА С ВИДЖЕТОМ -->
+                    <a href="#" class="btn" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- СКРИПТ TIMEPAD -->
+    <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440"></script>
 
 </body>
 </html>
