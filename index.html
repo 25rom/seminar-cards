@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Углубленный курс Art Body Flow | 26 апреля, НН</title>
     <style>
+        /* Импорт шрифтов: Montserrat для заголовков, Space Mono (или системный) для печатного текста */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap');
 
+        /* НОВАЯ ОРГАНИЧЕСКАЯ ПАЛИТРА (Морковный + Зеленый) */
         :root {
-            --green-dark: #1b2a21;
-            --green-light: #2c4234;
-            --carrot: #E85D04;
-            --carrot-hover: #DC2F02;
-            --bg-sand: #F4F1EB;
+            --green-dark: #1b2a21;   /* Глубокий хвойный/лесной */
+            --green-light: #2c4234;  /* Светлый оттенок зеленого для акцентов */
+            --carrot: #E85D04;       /* Сочный морковный/энергия */
+            --carrot-hover: #DC2F02; /* Более темный морковный для наведения */
+            --bg-sand: #F4F1EB;      /* Теплый светлый фон (не чисто белый) */
             --text-dark: #1b2a21;    
             --white: #ffffff;
         }
@@ -35,6 +37,7 @@
 
         section { padding: 90px 0; }
 
+        /* Типографика */
         h1, h2, h3 { text-transform: uppercase; margin-top: 0; }
 
         h1 {
@@ -57,6 +60,7 @@
         h3 { font-size: 1.3em; font-weight: 800; letter-spacing: 1px; color: var(--green-dark); }
         p { font-size: 1.1em; font-weight: 400; margin-bottom: 20px; }
 
+        /* СОВРЕМЕННАЯ КНОПКА (Органика, скругления, морковный цвет) */
         .btn {
             display: inline-block;
             background-color: var(--carrot);
@@ -67,9 +71,9 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             border: none;
-            border-radius: 50px;
+            border-radius: 50px; /* Полное скругление! */
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Эффект пружинки */
             text-align: center;
             box-shadow: 0 10px 20px rgba(232, 93, 4, 0.2);
         }
@@ -80,9 +84,11 @@
             box-shadow: 0 15px 25px rgba(232, 93, 4, 0.4);
         }
 
+        /* ГЛАВНЫЙ ЭКРАН: АБСТРАКЦИЯ + ЗЕЛЕНЫЙ ФОН */
         .hero {
             position: relative;
             background-color: var(--green-dark);
+            /* Паттерн: первобытные черточки, штрихи и круги (написано на SVG в base64) */
             background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232c4234' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23E85D04' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23E85D04' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
             color: var(--white);
             padding: 180px 20px 120px 20px;
@@ -98,6 +104,7 @@
 
         .hero .container { position: relative; z-index: 2; }
 
+        /* ШАПКА ПОСТЕРА НА ХИРО */
         .hero-top-bar {
             position: absolute;
             top: 40px;
@@ -121,101 +128,217 @@
         .location-details { display: flex; flex-direction: column; justify-content: center; }
         .location-title { font-size: 1.1em; font-weight: 800; color: var(--white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         .location-city { font-size: 0.85em; font-weight: 600; color: var(--carrot); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .location-logo {
+            height: 60px; width: 60px;
+            background-color: var(--bg-sand);
+            border-radius: 50%;
+            object-fit: contain;
+            padding: 4px;
+        }
 
-        .hero .subtitle { font-size: 1.2em; font-weight: 600; letter-spacing: 3px; color: var(--carrot); margin-bottom: 10px; text-transform: uppercase; }
-        .hero-tagline { font-size: 1.6em; font-weight: 300; line-height: 1.4; color: var(--white); margin: 0 auto 20px auto; }
+        .hero .subtitle {
+            font-size: 1.2em; font-weight: 600; letter-spacing: 3px;
+            color: var(--carrot); margin-bottom: 10px; text-transform: uppercase;
+        }
+
+        .hero-tagline {
+            font-size: 1.6em; font-weight: 300; line-height: 1.4;
+            color: var(--white); margin: 0 auto 20px auto;
+        }
         .hero-tagline strong { color: var(--carrot); font-weight: 600; margin: 0 5px; }
 
+        /* СПИСКИ */
         .editorial-list { list-style: none; padding: 0; margin: 0; }
-        .editorial-list li { position: relative; padding-left: 30px; margin-bottom: 15px; font-size: 1.1em; font-weight: 400; }
-        .editorial-list li::before { content: ""; position: absolute; left: 0; top: 12px; width: 15px; height: 3px; background-color: var(--carrot); border-radius: 5px; }
+        .editorial-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+        .editorial-list li::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 12px;
+            width: 15px; height: 3px;
+            background-color: var(--carrot);
+            border-radius: 5px;
+        }
 
+        /* БЛОКИ И СЕТКА */
         .bg-white { background-color: var(--white); }
         .flex-row { display: flex; gap: 60px; flex-wrap: wrap; align-items: center; }
         .flex-half { flex: 1; min-width: 300px; }
         
-        .highlight-box { border: 2px solid var(--green-light); border-radius: 30px; padding: 40px; margin-top: 40px; background-color: rgba(44, 66, 52, 0.03); }
+        .highlight-box {
+            border: 2px solid var(--green-light);
+            border-radius: 30px;
+            padding: 40px;
+            margin-top: 40px;
+            background-color: rgba(44, 66, 52, 0.03);
+        }
 
-        .video-placeholder { width: 100%; height: 500px; background-color: var(--green-dark); border-radius: 40px; display: flex; justify-content: center; align-items: center; color: var(--white); font-weight: 800; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(27, 42, 33, 0.2); background-image: radial-gradient(var(--green-light) 2px, transparent 2px); background-size: 20px 20px; }
+        /* ВИДЕО-ЗАГЛУШКА (Скругленная) */
+        .video-placeholder {
+            width: 100%;
+            height: 500px;
+            background-color: var(--green-dark);
+            border-radius: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-weight: 800;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 40px rgba(27, 42, 33, 0.2);
+            /* Паттерн для красоты */
+            background-image: radial-gradient(var(--green-light) 2px, transparent 2px);
+            background-size: 20px 20px;
+        }
+        .video-placeholder:hover {
+            transform: scale(1.02);
+            color: var(--carrot);
+        }
+        .play-btn {
+            background: var(--carrot);
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2em; margin-bottom: 20px;
+        }
 
-        .master-image { width: 100%; height: 600px; background-image: url('https://i.postimg.cc/HJvNZWZy/foto3.png'); background-size: cover; background-position: center; border-radius: 40px; box-shadow: -20px 20px 0px var(--carrot); }
+        /* ФОТО МАСТЕРА (foto3) */
+        .master-image {
+            width: 100%;
+            height: 600px;
+            /* Автоматически грузит фото по вашей ссылке */
+            background-image: url('https://i.postimg.cc/HJvNZWZy/foto3.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 40px;
+            box-shadow: -20px 20px 0px var(--carrot); /* Стильная тень */
+        }
 
-        /* ПОДВАЛ */
-        .footer-section { background-color: var(--green-dark); color: var(--white); padding: 100px 0; }
+        /* ПОДВАЛ И ОРГАНИЗАЦИЯ */
+        .footer-section { background-color: var(--green-dark); color: var(--white); }
         
+        /* Типографика постера (Печатный стиль) */
         .print-style-text {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace; /* Печатный моноширинный шрифт */
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 0.9em;
             color: rgba(255, 255, 255, 0.6);
             border-left: 2px solid var(--carrot);
-            padding-left: 25px;
+            padding-left: 15px;
             margin-top: 20px;
             line-height: 1.8;
         }
         .print-style-text strong { color: var(--white); font-weight: normal;}
 
-        .price-list { list-style: none; padding: 0; border-top: 1px solid rgba(27, 42, 33, 0.1); }
+        .price-list { list-style: none; padding: 0; border-top: 1px solid rgba(255,255,255,0.1); }
         .price-list li {
             padding: 20px 0;
-            border-bottom: 1px solid rgba(27, 42, 33, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             display: flex;
             justify-content: space-between;
             font-size: 1.1em;
             align-items: center;
         }
-        .price-list span { font-weight: 900; color: var(--carrot); font-size: 1.3em; }
-
-        /* ПАРТНЕРЫ */
-        .partners-footer {
-            margin-top: 100px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+        .price-list span {
+            font-weight: 800;
+            color: var(--carrot);
+            font-size: 1.3em;
         }
-        .partner-dot {
-            width: 70px; height: 70px;
-            border: 1px dashed rgba(255,255,255,0.2);
+
+        /* ДОБАВЛЕНО ПО ЗАПРОСУ: Анимация и размеры QR-кодов */
+        .qr-link {
+            display: block;
+            width: 110px;
+            height: 110px;
+            transition: transform 0.3s ease;
+        }
+        .qr-link:hover {
+            transform: scale(1.1);
+        }
+        .qr-link img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ДОБАВЛЕНО ПО ЗАПРОСУ: Сетка партнеров */
+        .partner-circle {
+            width: 60px;
+            height: 60px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.6em; color: rgba(255,255,255,0.2);
         }
 
+        /* Адаптив */
         @media (max-width: 768px) {
             h1 { font-size: 2.8em; }
             h2 { font-size: 2em; }
-            .hero-top-bar { position: relative; top: 0; padding: 0; flex-direction: column; gap: 25px; margin-bottom: 40px; align-items: center; }
-            .location-block { text-align: center; flex-direction: column-reverse; }
-            .flex-row { flex-direction: column; gap: 40px; }
+            .hero-tagline { font-size: 1.3em; }
+            .master-image { height: 400px; box-shadow: -10px 10px 0px var(--carrot); }
+            .video-placeholder { height: 350px; }
+            
+            .hero { padding-top: 40px; }
+            .hero-top-bar {
+                position: relative; top: 0; padding: 0; flex-direction: column; gap: 25px; margin-bottom: 40px; align-items: center;
+            }
+            .date-block, .location-block { text-align: center; justify-content: center; }
+            .location-block { flex-direction: column-reverse; gap: 10px; }
+            .price-list li { flex-direction: column; align-items: flex-start; gap: 5px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ГЛАВНЫЙ ЭКРАН (Зеленый + Абстракция) -->
     <header class="hero">
         <div class="hero-top-bar">
+            <!-- Левый угол -->
             <div class="date-block">
                 <div class="date-number">26</div>
-                <div class="date-details"><span class="date-month">Апреля</span><span class="date-time">11:00 — 15:00</span></div>
+                <div class="date-details">
+                    <span class="date-month">Апреля</span>
+                    <span class="date-time">11:00 — 15:00</span>
+                </div>
             </div>
+
+            <!-- Правый угол -->
             <div class="location-block">
-                <div class="location-details"><span class="location-title">Нижний Новгород</span><span class="location-city">Real Dance Project</span></div>
-                ТЦ «Счастье» <br>[Белинского, 124]
+                <div class="location-details">
+                    <span class="location-title">Нижний Новгород</span>
+                    <span class="location-city">Real Dance Project</span>
+                </div>
+                ТЦ «Счастье» 
+            <br>[Белинского, 124]
             </div>
         </div>
+
         <div class="container">
             <div class="subtitle">Оксана Киреева (Москва)</div>
             <h1>ART BODY<br>FLOW</h1>
-            <p class="hero-tagline">Искусство владения телом.<br>Хатха-йога <strong>×</strong> Animal Flow</p>
-            <p style="font-size: 1.1em; font-weight: 300; max-width: 600px; margin: 0 auto 40px auto; color: rgba(255, 255, 255, 0.6);">Однодневный углубленный семинар-практикум.</p>
+            
+            <p class="hero-tagline">
+                Искусство владения телом.<br>
+                Хатха-йога <strong style="color: var(--carrot);">×</strong> Animal Flow
+            </p>
+            
+            <p style="font-size: 1.1em; font-weight: 300; max-width: 600px; margin: 0 auto 40px auto; color: rgba(255, 255, 255, 0.6);">
+                Однодневный углубленный семинар-практикум.
+            </p>
+
             <a href="#booking" class="btn">ЗАБРОНИРОВАТЬ МЕСТО</a>
         </div>
     </header>
 
+    <!-- О НАПРАВЛЕНИИ (С Видео-заглушкой) -->
     <section class="container">
         <div class="flex-row">
             <div class="flex-half">
@@ -225,13 +348,18 @@
                 <p>Вы научитесь составлять бесконечно уникальные последовательности элементов, работая в разных плоскостях.</p>
             </div>
             <div class="flex-half">
+                <!-- ВИДЕО ЗАГЛУШКА -->
                 <div class="video-placeholder">
-                    <div style="text-align: center;"><div class="play-btn" style="background: var(--carrot); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2em; margin: 0 auto 20px auto; color: white;">▶</div>СМОТРЕТЬ ВИДЕО МЕТОДА</div>
+                    <div style="text-align: center;">
+                        <div class="play-btn" style="color: white; margin: 0 auto 20px auto;">▶</div>
+                        СМОТРЕТЬ ВИДЕО МЕТОДА
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ПРОГРАММА СЕМИНАРА -->
     <section class="bg-white">
         <div class="container">
             <h2>Программа практикума</h2>
@@ -246,6 +374,7 @@
                         <li>Нижние балансы на руках — детальный разбор и ключи к их уверенному освоению.</li>
                     </ul>
                 </div>
+                
                 <div class="flex-half">
                     <div class="highlight-box">
                         <h3 style="margin-bottom: 5px;">Артефакты семинара</h3>
@@ -260,13 +389,16 @@
         </div>
     </section>
 
+    <!-- ОБ АВТОРЕ (Foto3) -->
     <section class="container">
         <h2>Мастер курса</h2>
         <div class="flex-row" style="align-items: center;">
             <div class="flex-half">
                 <h3 style="margin-bottom: 5px;">Оксана Киреева</h3>
                 <p style="color: var(--carrot); font-weight: 800; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px;">Город Москва</p>
+                
                 <p>Автор методики Art Body Flow. Опыт личной практики — более 20 лет, опыт преподавания — 17 лет.</p>
+                
                 <ul class="editorial-list" style="margin-top: 30px; font-size: 0.95em;">
                     <li>Сертифицированный инструктор Универсальной йоги А. В. Лаппа</li>
                     <li>Сертифицированный преподаватель метода Animal Flow</li>
@@ -277,75 +409,80 @@
                     <li>Участник обучающих семинаров центра «Анатомия»</li>
                 </ul>
             </div>
-            <div class="flex-half"><div class="master-image"></div></div>
+
+            <div class="flex-half">
+                <!-- ФОТО 3 (Автоматически грузится по вашей ссылке) -->
+                <div class="master-image"></div>
+            </div>
         </div>
     </section>
 
-    <!-- ПОДВАЛ -->
+    <!-- ОРГАНИЗАЦИЯ И ОПЛАТА -->
     <section id="booking" class="footer-section">
-        <div class="container">
-            <div class="flex-row" style="align-items: flex-start;">
+        <div class="container flex-row" style="align-items: flex-start;">
+            <div class="flex-half">
+                <h2 style="color: var(--carrot);">Организация</h2>
                 
-                <!-- ОРГАНИЗАЦИЯ -->
-                <div class="flex-half">
-                    <h2 style="color: var(--carrot);">Организация</h2>
-                    <div class="print-style-text">
-                        // DATE & TIME<br>
-                        <strong>26 АПРЕЛЯ / 11:00 — 15:00</strong><br><br>
-                        // LOCATION<br>
-                        <strong>Real Dance Project</strong><br>
-                        НИЖНИЙ НОВГОРОД<br>
-                        УЛ.БЕЛИНСКОГО, 124 [ТЦ "СЧАСТЬЕ", 4 ЭТАЖ]
-                    </div>
+                <!-- ПЕЧАТНЫЙ СТИЛЬ ОРГАНИЗАЦИИ (КАК НА ПОСТЕРАХ) -->
+                <div class="print-style-text">
+                    // DATE & TIME<br>
+                    <strong>26 АПРЕЛЯ / 11:00 — 15:00</strong><br><br>
+                    
+                    // LOCATION<br>
+                    <strong>Real Dance Project</strong><br>
+                    НИЖНИЙ НОВГОРОД<br>
+                    УЛ.БЕЛИНСКОГО, 124 [ТЦ "Счастье", 4 этаж]
+                </div>
 
-                    <!-- QR И СОЦСЕТИ -->
-                    <div style="display: flex; align-items: center; gap: 25px; margin-top: 50px;">
-                        <div style="display: flex; gap: 15px;">
-                            <a href="https://t.me/abf_2604" target="_blank" style="display: block; width: 110px; height: 110px; background: #fff; padding: 5px; border-radius: 12px;">
-                                <img src="https://i.ibb.co/VWj5t9vW/telega.png" style="width: 100%; height: 100%; object-fit: contain;">
-                            </a>
-                            <a href="https://vk.com/art_body_flow" target="_blank" style="display: block; width: 110px; height: 110px; background: #fff; padding: 5px; border-radius: 12px;">
-                                <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" style="width: 100%; height: 100%; object-fit: contain;">
-                            </a>
-                        </div>
-                        <div style="font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); line-height: 1.4;">
-                            <strong style="color: var(--carrot); display: block; margin-bottom: 5px;">Узнать подробности</strong>
-                            Наведи камеру на QR <br>или кликни для перехода <br>в сообщество
-                        </div>
+                <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: QR-коды -->
+                <div style="display: flex; align-items: center; gap: 20px; margin-top: 40px;">
+                    <div style="display: flex; gap: 15px;">
+                        <a href="https://t.me/abf_2604" target="_blank" class="qr-link">
+                            <img src="https://i.ibb.co/VWj5t9vW/telega.png" alt="Telegram" border="0">
+                        </a>
+                        <a href="https://vk.com/art_body_flow" target="_blank" class="qr-link">
+                            <img src="https://i.ibb.co/PBmqvZh/vkontakte-1.png" alt="VKontakte" border="0">
+                        </a>
+                    </div>
+                    <div style="font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255, 255, 255, 0.7); line-height: 1.4;">
+                        <strong style="color: var(--carrot); display: block; margin-bottom: 5px;">Узнать подробности</strong>
+                        Наведи камеру на QR<br>или кликни<br>для перехода в сообщество
                     </div>
                 </div>
 
-                <!-- КАРТОЧКА УЧАСТИЯ -->
-                <div class="flex-half">
-                    <div style="background: var(--white); color: var(--green-dark); padding: 45px; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
-                        <h2 style="color: var(--green-dark); margin-bottom: 25px;">Участие</h2>
-                        <ul class="price-list">
-                            <li>Early birds (до 17 апреля) <span>4,300 ₽</span></li>
-                            <li>С 17 по 26 апреля <span>5,000 ₽</span></li>
-                            <li>В день мероприятия <span>5,300 ₽</span></li>
-                        </ul>
-                        <div style="margin-top: 40px; text-align: center;">
-                            <a href="#" class="btn" style="width: 100%; box-sizing: border-box;" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
-                            <p style="font-size: 0.85em; color: #888; margin-top: 20px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">Предварительная регистрация обязательна!</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- СЕТКА ПАРТНЕРОВ -->
-            <div class="partners-footer">
-                <div class="partner-dot">Logo</div>
-                <div class="partner-dot">Logo</div>
-                <div class="partner-dot">Logo</div>
-                <div class="partner-dot">Logo</div>
-                <div class="partner-dot">Logo</div>
-                <div class="partner-dot">Logo</div>
-                <div class="partner-dot">Logo</div>
+            <div class="flex-half">
+                <h2 style="color: var(--white);">Участие</h2>
+                <p style="color: rgba(255,255,255,0.6); margin-bottom: 30px;">Предварительная регистрация обязательна. Количество мест ограничено вместимостью зала для комфортной практики</p>
+                
+                <ul class="price-list">
+                    <li>Early birds (до 17 апреля) <span>4,300 ₽</span></li>
+                    <li>С 17 по 26 апреля <span>5,000 ₽</span></li>
+                    <li>В день мероприятия <span>5,300 ₽</span></li>
+                </ul>
+
+                <div style="margin-top: 40px;">
+                    <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: data-timepad-widget-v2="event_register" -->
+                    <a href="#booking" class="btn" data-timepad-widget-v2="event_register">ЗАБРОНИРОВАТЬ МЕСТО</a>
+                </div>
             </div>
+        </div>
+
+        <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: Сетка партнеров -->
+        <div class="container" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <div class="partner-circle"></div>
+            <div class="partner-circle"></div>
+            <div class="partner-circle"></div>
+            <div class="partner-circle"></div>
+            <div class="partner-circle"></div>
+            <div class="partner-circle"></div>
+            <div class="partner-circle"></div>
         </div>
     </section>
 
-    <!-- Timepad Widget Script -->
-    <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440"></script>
+    <!-- ДОБАВЛЕНО ПО ЗАПРОСУ: Скрипт Timepad -->
+    <script type="text/javascript" async="async" defer="defer" charset="UTF-8" src="https://timepad.ru/js/tpwf/loader/min/loader.js" data-timepad-customized="376266" data-twf2s-event--id="3904440" data-timepad-widget-v2="event_register"></script>
+
 </body>
 </html>
