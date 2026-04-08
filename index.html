@@ -170,8 +170,7 @@
             margin-top: 40px;
             background-color: rgba(44, 66, 52, 0.03);
         }
-
-        /* ВИДЕО-ЗАГЛУШКА (Скругленная) */
+       /* ВИДЕО-ЗАГЛУШКА (Скругленная) */
         .video-placeholder {
             width: 100%;
             height: 500px;
@@ -189,6 +188,7 @@
             /* Паттерн для красоты */
             background-image: radial-gradient(var(--green-light) 2px, transparent 2px);
             background-size: 20px 20px;
+            overflow: hidden; /* ЭТОТ ПАРАМЕТР НУЖНО ДОБАВИТЬ */
         }
         .video-placeholder:hover {
             transform: scale(1.02);
@@ -331,9 +331,20 @@
                 <p>Полученные знания позволят кардинально расширить вашу библиотеку движений и повысить уровень владения телом. Ваши личные практики и классы для учеников обретут качественно новый уровень.</p>
                 <p>Вы научитесь составлять бесконечно уникальные последовательности элементов, работая в разных плоскостях.</p>
             </div>
-            <div class="flex-half">
                 <!-- ВИДЕО ЗАГЛУШКА -->
+                <div class="flex-half">
+                       <!-- ВИДЕО -->
                 <div class="video-placeholder">
+                    <iframe 
+                        src="https://vk.com/video_ext.php?oid=-237308735&id=456239018&autoplay=1&muted=1&hd=2" 
+                        width="100%" 
+                        height="100%" 
+                        allow="autoplay; encrypted-media; fullscreen; picture-in-picture" 
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
                     <div style="text-align: center;">
                         <div class="play-btn" style="color: white; margin: 0 auto 20px auto;">▶</div>
                         СМОТРЕТЬ ВИДЕО МЕТОДА
