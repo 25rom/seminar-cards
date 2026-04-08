@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Углубленный курс Art Body Flow | 16 мая, НН</title>
+    <title>Углубленный курс Art Body Flow | 26 апреля, НН</title>
     <style>
-        /* Импорт шрифтов: Montserrat для заголовков, Space Mono (или системный) для печатного текста */
+        /* Импорт шрифтов */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap');
 
-        /* ОБНОВЛЕННАЯ ВЕСЕННЯЯ ПАЛИТРА (Изумруд + Солнечный акцент) */
+        /* ОБНОВЛЕННАЯ ВЕСЕННЯЯ ПАЛИТРА */
         :root {
-            --green-dark: #2D6A4F;   /* Глубокий изумрудный (весенняя трава) */
+            --green-dark: #2D6A4F;   /* Глубокий изумрудный */
             --green-light: #52B788;  /* Светлый весенний зеленый */
             --carrot: #FF7F11;       /* Яркий солнечный оранжевый */
             --carrot-hover: #E85D04; /* Насыщенный для наведения */
@@ -25,6 +25,8 @@
             padding: 0;
             color: var(--text-dark);
             background-color: var(--bg-sand);
+            /* ПАТТЕРН НА ВЕСЬ ЛЕНДИНГ */
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2352B788' stroke-width='2' stroke-linecap='round' opacity='0.3'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23FF7F11' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23FF7F11' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
             line-height: 1.6;
             overflow-x: hidden;
         }
@@ -60,7 +62,6 @@
         h3 { font-size: 1.3em; font-weight: 800; letter-spacing: 1px; color: var(--green-dark); }
         p { font-size: 1.1em; font-weight: 400; margin-bottom: 20px; }
 
-        /* СОВРЕМЕННАЯ КНОПКА */
         .btn {
             display: inline-block;
             background-color: var(--carrot);
@@ -88,8 +89,6 @@
         .hero {
             position: relative;
             background-color: var(--green-dark);
-            /* Паттерн обновлен под новую палитру */
-            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2352B788' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23FF7F11' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23FF7F11' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
             color: var(--white);
             padding: 180px 20px 120px 20px;
             text-align: center;
@@ -104,7 +103,6 @@
 
         .hero .container { position: relative; z-index: 2; }
 
-        /* ШАПКА ПОСТЕРА НА ХИРО */
         .hero-top-bar {
             position: absolute;
             top: 40px;
@@ -186,20 +184,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 20px 40px rgba(45, 106, 79, 0.2);
-            background-image: radial-gradient(var(--green-light) 2px, transparent 2px);
-            background-size: 20px 20px;
             overflow: hidden;
         }
         .video-placeholder:hover {
             transform: scale(1.02);
             color: var(--white);
-        }
-        .play-btn {
-            background: var(--carrot);
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 2em; margin-bottom: 20px;
         }
 
         /* ФОТО МАСТЕРА */
