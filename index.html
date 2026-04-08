@@ -8,10 +8,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap');
 
         :root {
-            --green-dark: #2D6A4F;   
-            --green-light: #52B788;  
-            --carrot: #FF7F11;       
-            --carrot-hover: #E85D04; 
+            --green-dark: #1b2a21;   
+            --green-light: #2c4234;  
+            --carrot: #E85D04;       
+            --carrot-hover: #DC2F02; 
             --bg-sand: #F4F1EB;      
             --text-dark: #1b2a21;    
             --white: #ffffff;
@@ -22,9 +22,10 @@
             margin: 0;
             padding: 0;
             color: var(--text-dark);
+            /* ПАТТЕРН НА ВЕСЬ САЙТ */
             background-color: var(--bg-sand);
-            /* ПРИНТ НА ВЕСЬ ЛЕНДИНГ */
-            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2352B788' stroke-width='2' stroke-linecap='round' opacity='0.3'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23FF7F11' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23FF7F11' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232c4234' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23E85D04' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23E85D04' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
             line-height: 1.6;
             overflow-x: hidden;
         }
@@ -41,7 +42,7 @@
 
         h1 { font-size: 4em; font-weight: 900; line-height: 0.95; letter-spacing: -2px; color: var(--white); margin-bottom: 20px; }
 
-        h2 { font-size: 2.5em; font-weight: 900; color: var(--green-dark); margin-bottom: 40px; letter-spacing: -1px; }
+        h2 { font-size: 2.5em; font-weight: 900; color: var(--carrot); margin-bottom: 40px; letter-spacing: -1px; }
 
         h3 { font-size: 1.3em; font-weight: 800; letter-spacing: 1px; color: var(--green-dark); }
         p { font-size: 1.1em; font-weight: 400; margin-bottom: 20px; }
@@ -60,7 +61,7 @@
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
-            box-shadow: 0 10px 20px rgba(255, 127, 17, 0.3);
+            box-shadow: 0 10px 20px rgba(232, 93, 4, 0.2);
         }
 
         .btn:hover {
@@ -69,21 +70,21 @@
             box-shadow: 0 15px 25px rgba(232, 93, 4, 0.4);
         }
 
-        /* ЦВЕТА С ПРОЗРАЧНОСТЬЮ ДЛЯ ПРОЯВЛЕНИЯ ПРИНТА */
+        /* ПРОЗРАЧНОСТЬ ДЛЯ СЕКЦИЙ, ЧТОБЫ БЫЛ ВИДЕН ПРИНТ */
         .hero {
             position: relative;
-            background-color: rgba(45, 106, 79, 0.95); 
+            background-color: rgba(27, 42, 33, 0.95); /* Зеленый с прозрачностью */
             color: var(--white);
             padding: 180px 20px 120px 20px;
             text-align: center;
         }
 
         .bg-white { 
-            background-color: rgba(255, 255, 255, 0.95); 
+            background-color: rgba(255, 255, 255, 0.95); /* Белый с прозрачностью */
         }
 
         .footer-section { 
-            background-color: rgba(45, 106, 79, 0.95); 
+            background-color: rgba(27, 42, 33, 0.95); 
             color: var(--white); 
         }
 
@@ -134,10 +135,10 @@
         .editorial-list li::before {
             content: "";
             position: absolute;
-            left: 0; top: 8px;
-            width: 10px; height: 10px;
+            left: 0; top: 10px;
+            width: 8px; height: 8px; /* Круглый буллет */
             background-color: var(--carrot);
-            border-radius: 50%; /* Органичный кружок */
+            border-radius: 50%; /* Скругление в круг */
         }
 
         .flex-row { display: flex; gap: 60px; flex-wrap: wrap; align-items: center; }
@@ -148,7 +149,7 @@
             border-radius: 30px;
             padding: 40px;
             margin-top: 40px;
-            background-color: rgba(82, 183, 136, 0.1);
+            background-color: rgba(44, 66, 52, 0.05);
         }
 
         .video-placeholder {
@@ -164,12 +165,12 @@
             letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 20px 40px rgba(45, 106, 79, 0.2);
+            box-shadow: 0 20px 40px rgba(27, 42, 33, 0.2);
             overflow: hidden;
         }
         .video-placeholder:hover {
             transform: scale(1.02);
-            color: var(--white);
+            color: var(--carrot);
         }
 
         .master-image {
@@ -179,7 +180,7 @@
             background-size: cover;
             background-position: center;
             border-radius: 40px;
-            box-shadow: -20px 20px 0px var(--green-light);
+            box-shadow: -20px 20px 0px var(--carrot);
         }
 
         .print-style-text {
@@ -229,7 +230,7 @@
             h1 { font-size: 2.8em; }
             h2 { font-size: 2em; }
             .hero-tagline { font-size: 1.3em; }
-            .master-image { height: 400px; box-shadow: -10px 10px 0px var(--green-light); }
+            .master-image { height: 400px; box-shadow: -10px 10px 0px var(--carrot); }
             .video-placeholder { height: 350px; }
             .hero { padding-top: 40px; }
             .hero-top-bar {
@@ -385,7 +386,7 @@
                     </div>
                     <div style="font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); line-height: 1.4;">
                         <strong style="color: var(--carrot); display: block; margin-bottom: 5px;">Узнать подробности</strong>
-                        СКАНИРУЙ <br>ИЛИ КЛИКАЙ НА QR<br>
+                        Наведи камеру на QR <br>или кликни для перехода <br>в сообщество
                     </div>
                 </div>
 
@@ -405,6 +406,16 @@
                     <a href="#!" class="btn">ЗАБРОНИРОВАТЬ МЕСТО</a>
                 </div>
             </div>
+        </div>
+
+        <div class="container" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <div style="width: 60px; height: 60px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%;"></div>
         </div>
     </section>
 
