@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Углубленный курс Art Body Flow | 26 апреля, НН</title>
     <style>
-        /* Импорт шрифтов */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap');
 
-        /* ОБНОВЛЕННАЯ ВЕСЕННЯЯ ПАЛИТРА */
         :root {
-            --green-dark: #2D6A4F;   /* Глубокий изумрудный */
-            --green-light: #52B788;  /* Светлый весенний зеленый */
-            --carrot: #FF7F11;       /* Яркий солнечный оранжевый */
-            --carrot-hover: #E85D04; /* Насыщенный для наведения */
-            --bg-sand: #F4F1EB;      /* Теплый светлый фон */
+            --green-dark: #2D6A4F;   
+            --green-light: #52B788;  
+            --carrot: #FF7F11;       
+            --carrot-hover: #E85D04; 
+            --bg-sand: #F4F1EB;      
             --text-dark: #1b2a21;    
             --white: #ffffff;
         }
@@ -25,7 +23,7 @@
             padding: 0;
             color: var(--text-dark);
             background-color: var(--bg-sand);
-            /* ПАТТЕРН НА ВЕСЬ ЛЕНДИНГ */
+            /* ПРИНТ НА ВЕСЬ ЛЕНДИНГ */
             background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2352B788' stroke-width='2' stroke-linecap='round' opacity='0.3'%3E%3Cpath d='M10 20l15 30M25 20l15 30M15 80l-10 20M30 80l-10 20'/%3E%3Ccircle cx='90' cy='30' r='3' fill='%23FF7F11' stroke='none'/%3E%3Cpath d='M80 90l20-10M85 100l20-10' stroke='%23FF7F11' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
             line-height: 1.6;
             overflow-x: hidden;
@@ -39,25 +37,11 @@
 
         section { padding: 90px 0; }
 
-        /* Типографика */
         h1, h2, h3 { text-transform: uppercase; margin-top: 0; }
 
-        h1 {
-            font-size: 4em;
-            font-weight: 900;
-            line-height: 0.95;
-            letter-spacing: -2px;
-            color: var(--white);
-            margin-bottom: 20px;
-        }
+        h1 { font-size: 4em; font-weight: 900; line-height: 0.95; letter-spacing: -2px; color: var(--white); margin-bottom: 20px; }
 
-        h2 {
-            font-size: 2.5em;
-            font-weight: 900;
-            color: var(--green-dark);
-            margin-bottom: 40px;
-            letter-spacing: -1px;
-        }
+        h2 { font-size: 2.5em; font-weight: 900; color: var(--green-dark); margin-bottom: 40px; letter-spacing: -1px; }
 
         h3 { font-size: 1.3em; font-weight: 800; letter-spacing: 1px; color: var(--green-dark); }
         p { font-size: 1.1em; font-weight: 400; margin-bottom: 20px; }
@@ -85,23 +69,23 @@
             box-shadow: 0 15px 25px rgba(232, 93, 4, 0.4);
         }
 
-        /* ГЛАВНЫЙ ЭКРАН */
+        /* СЕКЦИИ С ПРОЗРАЧНОСТЬЮ ДЛЯ ОТОБРАЖЕНИЯ ПРИНТА */
         .hero {
             position: relative;
-            background-color: var(--green-dark);
+            background-color: rgba(45, 106, 79, 0.95); /* Зеленый с прозрачностью */
             color: var(--white);
             padding: 180px 20px 120px 20px;
             text-align: center;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, transparent 0%, var(--green-dark) 90%);
+        .bg-white { 
+            background-color: rgba(255, 255, 255, 0.9); /* Белый с прозрачностью */
         }
 
-        .hero .container { position: relative; z-index: 2; }
+        .footer-section { 
+            background-color: rgba(45, 106, 79, 0.95); /* Зеленый с прозрачностью */
+            color: var(--white); 
+        }
 
         .hero-top-bar {
             position: absolute;
@@ -138,7 +122,6 @@
         }
         .hero-tagline strong { color: var(--carrot); font-weight: 600; margin: 0 5px; }
 
-        /* СПИСКИ */
         .editorial-list { list-style: none; padding: 0; margin: 0; }
         .editorial-list li {
             position: relative;
@@ -156,8 +139,6 @@
             border-radius: 5px;
         }
 
-        /* БЛОКИ И СЕТКА */
-        .bg-white { background-color: var(--white); }
         .flex-row { display: flex; gap: 60px; flex-wrap: wrap; align-items: center; }
         .flex-half { flex: 1; min-width: 300px; }
         
@@ -169,7 +150,6 @@
             background-color: rgba(82, 183, 136, 0.05);
         }
 
-        /* ВИДЕО-ЗАГЛУШКА */
         .video-placeholder {
             width: 100%;
             height: 500px;
@@ -191,7 +171,6 @@
             color: var(--white);
         }
 
-        /* ФОТО МАСТЕРА */
         .master-image {
             width: 100%;
             height: 600px;
@@ -202,9 +181,6 @@
             box-shadow: -20px 20px 0px var(--green-light);
         }
 
-        /* ПОДВАЛ И ОРГАНИЗАЦИЯ */
-        .footer-section { background-color: var(--green-dark); color: var(--white); }
-        
         .print-style-text {
             font-family: 'Courier New', Courier, monospace;
             text-transform: uppercase;
@@ -248,14 +224,12 @@
             object-fit: contain;
         }
 
-        /* Адаптив */
         @media (max-width: 768px) {
             h1 { font-size: 2.8em; }
             h2 { font-size: 2em; }
             .hero-tagline { font-size: 1.3em; }
             .master-image { height: 400px; box-shadow: -10px 10px 0px var(--green-light); }
             .video-placeholder { height: 350px; }
-            
             .hero { padding-top: 40px; }
             .hero-top-bar {
                 position: relative; top: 0; padding: 0; flex-direction: column; gap: 25px; margin-bottom: 40px; align-items: center;
