@@ -69,21 +69,21 @@
             box-shadow: 0 15px 25px rgba(232, 93, 4, 0.4);
         }
 
-        /* СЕКЦИИ С ПРОЗРАЧНОСТЬЮ ДЛЯ ОТОБРАЖЕНИЯ ПРИНТА */
+        /* ЦВЕТА С ПРОЗРАЧНОСТЬЮ ДЛЯ ПРОЯВЛЕНИЯ ПРИНТА */
         .hero {
             position: relative;
-            background-color: rgba(45, 106, 79, 0.95); /* Зеленый с прозрачностью */
+            background-color: rgba(45, 106, 79, 0.95); 
             color: var(--white);
             padding: 180px 20px 120px 20px;
             text-align: center;
         }
 
         .bg-white { 
-            background-color: rgba(255, 255, 255, 0.9); /* Белый с прозрачностью */
+            background-color: rgba(255, 255, 255, 0.95); 
         }
 
         .footer-section { 
-            background-color: rgba(45, 106, 79, 0.95); /* Зеленый с прозрачностью */
+            background-color: rgba(45, 106, 79, 0.95); 
             color: var(--white); 
         }
 
@@ -122,6 +122,7 @@
         }
         .hero-tagline strong { color: var(--carrot); font-weight: 600; margin: 0 5px; }
 
+        /* СПИСКИ С КРУГЛЫМИ БУЛЛЕТАМИ */
         .editorial-list { list-style: none; padding: 0; margin: 0; }
         .editorial-list li {
             position: relative;
@@ -133,10 +134,10 @@
         .editorial-list li::before {
             content: "";
             position: absolute;
-            left: 0; top: 12px;
-            width: 15px; height: 3px;
+            left: 0; top: 8px;
+            width: 10px; height: 10px;
             background-color: var(--carrot);
-            border-radius: 5px;
+            border-radius: 50%; /* Органичный кружок */
         }
 
         .flex-row { display: flex; gap: 60px; flex-wrap: wrap; align-items: center; }
@@ -147,7 +148,7 @@
             border-radius: 30px;
             padding: 40px;
             margin-top: 40px;
-            background-color: rgba(82, 183, 136, 0.05);
+            background-color: rgba(82, 183, 136, 0.1);
         }
 
         .video-placeholder {
@@ -242,7 +243,6 @@
 </head>
 <body>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
     <header class="hero">
         <div class="hero-top-bar">
             <div class="date-block">
@@ -279,7 +279,6 @@
         </div>
     </header>
 
-    <!-- О НАПРАВЛЕНИИ -->
     <section class="container">
         <div class="flex-row">
             <div class="flex-half">
@@ -304,7 +303,6 @@
         </div>
     </section>
 
-    <!-- ПРОГРАММА СЕМИНАРА -->
     <section class="bg-white">
         <div class="container">
             <h2>Программа практикума</h2>
@@ -334,7 +332,6 @@
         </div>
     </section>
 
-    <!-- ОБ АВТОРЕ -->
     <section class="container">
         <h2>Мастер курса</h2>
         <div class="flex-row" style="align-items: center;">
@@ -361,7 +358,6 @@
         </div>
     </section>
 
-    <!-- ОРГАНИЗАЦИЯ И ОПЛАТА -->
     <section id="booking" class="footer-section">
         <div class="container flex-row" style="align-items: flex-start;">
             
