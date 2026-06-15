@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Карточки семинара</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface2: #f0f0f0;
+  --border: #e0e0e0;
+  --text: #1a1a1a;
+  --text2: #666666;
+  --text3: #999999;
+  --accent: #1a73e8;
+  --accent-light: #e8f0fe;
+  --accent-dark: #1557b0;
+  --danger: #d93025;
+  --danger-light: #fce8e6;
+  --success: #188038;
+  --success-light: #e6f4ea;
+  --warn-bg: #fef9e7;
+  --warn-border: #f9ab00;
+  --warn-text: #7a4f00;
+  --card-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1e;
+    --surface: #2c2c2e;
+    --surface2: #3a3a3c;
+    --border: #3a3a3c;
+    --text: #f2f2f7;
+    --text2: #aeaeb2;
+    --text3: #636366;
+    --accent: #4da3ff;
+    --accent-light: #1a2a40;
+    --accent-dark: #90c2ff;
+    --danger: #ff6b6b;
+    --danger-light: #3a1a1a;
+    --success: #32d74b;
+    --success-light: #1a3a1a;
+    --warn-bg: #2a2000;
+    --warn-border: #f9ab00;
+    --warn-text: #ffd966;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+body { overflow-x: hidden; }
+
+/* ── Layout ── */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+}
+.topbar-title { font-size: 16px; font-weight: 600; flex: 1; }
+.topbar svg { width: 24px; height: 24px; color: var(--accent); flex-shrink: 0; }
+
+.main { flex: 1; padding: 14px; max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* ── Tabs ── */
+.tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 16px; }
+.tab { flex: 1; text-align: center; padding: 7px 4px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text2); border: none; background: none; transition: all 0.15s; }
+.tab.active { background: var(--surface); color: var(--accent); box-shadow: var(--card-shadow); }
+
+/* ── API Key ── */
+.api-block { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; margin-bottom: 14px; }
+.api-block label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 6px; font-weight: 500; }
+.api-row { display: flex; gap: 8px; }
+.api-row input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 11px; font-size: 13px; color: var(--text); }
+.api-row input:focus { outline: none; border-color: var(--accent); }
+.btn-sm { padding: 8px 12px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: var(--accent-light); color: var(--accent); white-space: nowrap; }
+.btn-sm:hover { background: var(--accent); color: #fff; }
+.api-status { font-size: 11px; margin-top: 6px; }
+.api-status.ok { color: var(--success); }
+.api-status.err { color: var(--danger); }
+
+/* ── Project folders ── */
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.section-head h2 { font-size: 14px; font-weight: 600; color: var(--text); }
+.btn-add { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; border: 1.5px dashed var(--border); background: none; color: var(--text2); }
+.btn-add:hover { border-color: var(--accent); color: var(--accent); }
+
+.folder-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.folder-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.folder-item:hover { border-color: var(--accent); }
+.folder-item.active { border-color: var(--accent); background: var(--accent-light); }
+.folder-icon { font-size: 22px; flex-shrink: 0; }
+.folder-info { flex: 1; min-width: 0; }
+.folder-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.folder-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.folder-actions { display: flex; gap: 6px; }
+.icon-btn { background: none; border: none; cursor: pointer; padding: 4px; border-radius: 6px; color: var(--text3); font-size: 16px; line-height: 1; }
+.icon-btn:hover { color: var(--danger); background: var(--danger-light); }
+
+/* ── Modal ── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: var(--radius); padding: 20px; width: 100%; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+.modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+.modal input, .modal textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 14px; color: var(--text); margin-bottom: 10px; }
+.modal input:focus, .modal textarea:focus { outline: none; border-color: var(--accent); }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 6px; }
+.btn-primary { padding: 9px 18px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-ghost { padding: 9px 14px; border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; border: 1px solid var(--border); background: none; color: var(--text2); }
+
+/* ── Upload ── */
+.upload-box {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 28px 16px; text-align: center; cursor: pointer; margin-bottom: 12px;
+  transition: border-color 0.15s; background: var(--surface);
+}
+.upload-box:hover, .upload-box.drag { border-color: var(--accent); background: var(--accent-light); }
+.upload-icon { font-size: 32px; margin-bottom: 8px; }
+.upload-box p { font-size: 14px; color: var(--text2); }
+.upload-box span { font-size: 12px; color: var(--text3); }
+input[type=file] { display: none; }
+
+.file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.file-item { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; }
+.file-item .fname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-item .fsize { color: var(--text3); font-size: 11px; flex-shrink: 0; }
+.file-item .fdel { cursor: pointer; color: var(--text3); font-size: 18px; line-height: 1; flex-shrink: 0; }
+.file-item .fdel:hover { color: var(--danger); }
+
+.gen-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.opt-group label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px; }
+.opt-group select { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 13px; color: var(--text); }
+
+.btn-gen { width: 100%; padding: 12px; border-radius: var(--radius); font-size: 15px; font-weight: 600; cursor: pointer; border: none; background: var(--accent); color: #fff; transition: opacity 0.15s; }
+.btn-gen:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-gen:not(:disabled):hover { background: var(--accent-dark); }
+
+.folder-select-notice { font-size: 13px; color: var(--text3); background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-sm); padding: 9px 12px; margin-bottom: 12px; }
+
+/* ── Loading ── */
+.loading-wrap { text-align: center; padding: 32px 16px; }
+.spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-wrap p { font-size: 14px; color: var(--text2); }
+
+/* ── Error ── */
+.error-box { background: var(--danger-light); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 10px 13px; font-size: 13px; color: var(--danger); margin-bottom: 12px; display: none; }
+
+/* ── Cards View ── */
+.cards-section { margin-bottom: 24px; }
+.cards-section-title { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.cards-grid { display: flex; flex-direction: column; gap: 12px; }
+
+/* Card base */
+.sem-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+  position: relative;
+}
+/* Horizontal card (≤3 theses) */
+.sem-card.horizontal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0 16px;
+}
+.sem-card.horizontal .card-header { grid-column: 1 / -1; }
+.sem-card.horizontal .card-theses { grid-column: 1; }
+.sem-card.horizontal .card-right { grid-column: 2; display: flex; flex-direction: column; gap: 10px; }
+.sem-card.horizontal .card-note { grid-column: 1 / -1; }
+
+/* Vertical card (≥4 theses) */
+.sem-card.vertical .card-right { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+.card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.card-num {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; background: var(--accent-light); color: var(--accent);
+}
+.card-title-wrap { flex: 1; }
+.card-title { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--text); }
+.card-format-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 20px; background: var(--accent-light); color: var(--accent); margin-top: 4px; display: inline-block; }
+.card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.card-act-btn { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 6px; color: var(--text3); font-size: 17px; line-height: 1; }
+.card-act-btn:hover { background: var(--surface2); color: var(--text); }
+
+.sec-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 7px; }
+
+.theses-list { list-style: none; }
+.theses-list li {
+  font-size: 13px; line-height: 1.55; color: var(--text);
+  padding: 5px 0 5px 18px; position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.theses-list li:last-child { border-bottom: none; }
+.theses-list li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-size: 12px; top: 6px; }
+
+.terms-wrap { }
+.term-pill { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--accent-light); color: var(--accent); margin: 2px 2px 2px 0; }
+
+.card-note {
+  margin-top: 10px; padding: 9px 11px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-left: 3px solid;
+}
+.card-note.warn { background: var(--warn-bg); border-color: var(--warn-border); }
+.card-note.warn .note-lbl { color: var(--warn-text); font-size: 11px; font-weight: 600; margin-bottom: 3px; }
+.card-note.warn .note-txt { color: var(--warn-text); font-size: 12px; line-height: 1.45; }
+.card-note.info { background: var(--accent-light); border-color: var(--accent); }
+.card-note.info .note-lbl { color: var(--accent-dark); font-size: 11px; font-weight: 600; margin-bottom: 3px; }
+.card-note.info .note-txt { color: var(--accent-dark); font-size: 12px; line-height: 1.45; }
+.card-note.danger { background: var(--danger-light); border-color: var(--danger); }
+.card-note.danger .note-lbl { color: var(--danger); font-size: 11px; font-weight: 600; margin-bottom: 3px; }
+.card-note.danger .note-txt { color: var(--danger); font-size: 12px; line-height: 1.45; }
+
+/* ── Toolbar ── */
+.cards-toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.toolbar-btn { display: flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text2); }
+.toolbar-btn:hover { border-color: var(--accent); color: var(--accent); }
+.toolbar-btn.primary-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
+.toolbar-btn.primary-btn:hover { background: var(--accent-dark); }
+
+/* ── Empty state ── */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
+.empty-state .big-icon { font-size: 44px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #1a1a1a; color: #fff; font-size: 13px; padding: 9px 18px;
+  border-radius: 20px; opacity: 0; pointer-events: none; z-index: 9999;
+  transition: opacity 0.25s; white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+
+/* ── Bottom nav ── */
+.bottom-nav {
+  position: sticky; bottom: 0;
+  background: var(--surface); border-top: 1px solid var(--border);
+  display: flex;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 8px 4px; cursor: pointer; border: none; background: none;
+  font-size: 10px; font-weight: 500; color: var(--text3); gap: 3px;
+}
+.nav-item svg { width: 22px; height: 22px; }
+.nav-item.active { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+    </svg>
+    <span class="topbar-title">Карточки семинара</span>
+    <div id="api-dot" style="width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0" title="Статус API"></div>
+  </div>
+
+  <!-- Main -->
+  <div class="main" id="main-content">
+    <!-- Screens injected by JS -->
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Проекты
+    </button>
+    <button class="nav-item" id="nav-gen" onclick="showScreen('generate')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Создать
+    </button>
+    <button class="nav-item" id="nav-cards" onclick="showScreen('cards')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Карточки
+    </button>
+    <button class="nav-item" id="nav-settings" onclick="showScreen('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Настройки
+    </button>
+  </div>
+</div>
+
+<!-- Modal: new folder -->
+<div class="modal-overlay" id="modal-folder">
+  <div class="modal">
+    <h3>Новый проект</h3>
+    <input type="text" id="folder-name-input" placeholder="Название проекта" maxlength="40">
+    <input type="text" id="folder-emoji-input" placeholder="Эмодзи (необязательно, напр. 🧠)" maxlength="4">
+    <div class="modal-btns">
+      <button class="btn-ghost" onclick="closeModal('modal-folder')">Отмена</button>
+      <button class="btn-primary" onclick="createFolder()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CONFIG — вставь свой ключ сюда:
+// ═══════════════════════════════════════════════
+const GEMINI_KEY_STORAGE = 'seminar_gemini_key';
+let GEMINI_API_KEY = localStorage.getItem(GEMINI_KEY_STORAGE) || '';
+
+// ── State ──
+let state = {
+  folders: JSON.parse(localStorage.getItem('sem_folders') || '[]'),
+  cards: JSON.parse(localStorage.getItem('sem_cards') || '{}'),
+  activeFolderId: null,
+  currentScreen: 'home',
+  uploadedFiles: [],
+  lastGenCards: [],
+};
+
+if (state.folders.length === 0) {
+  state.folders = [{ id: uid(), name: 'Общее', emoji: '📚', created: Date.now() }];
+  saveState();
+}
+
+function uid() { return Math.random().toString(36).slice(2, 10); }
+function saveState() {
+  localStorage.setItem('sem_folders', JSON.stringify(state.folders));
+  localStorage.setItem('sem_cards', JSON.stringify(state.cards));
+}
+
+// ── Screens ──
+function showScreen(name) {
+  state.currentScreen = name;
+  ['home','gen','cards','settings'].forEach(n => {
+    document.getElementById('nav-'+n)?.classList.remove('active');
+  });
+  const navMap = {home:'home', generate:'gen', cards:'cards', settings:'settings'};
+  document.getElementById('nav-'+(navMap[name]||name))?.classList.add('active');
+  renderScreen();
+}
+
+function renderScreen() {
+  const el = document.getElementById('main-content');
+  switch (state.currentScreen) {
+    case 'home': el.innerHTML = renderHome(); bindHomeEvents(); break;
+    case 'generate': el.innerHTML = renderGenerate(); bindGenEvents(); break;
+    case 'cards': el.innerHTML = renderCards(); bindCardsEvents(); break;
+    case 'settings': el.innerHTML = renderSettings(); bindSettingsEvents(); break;
+  }
+  updateApiDot();
+}
+
+// ══════════════ HOME ══════════════
+function renderHome() {
+  const folders = state.folders;
+  const folderItems = folders.map(f => {
+    const count = (state.cards[f.id] || []).length;
+    return `<div class="folder-item" data-id="${f.id}" onclick="openFolder('${f.id}')">
+      <div class="folder-icon">${f.emoji || '📁'}</div>
+      <div class="folder-info">
+        <div class="folder-name">${esc(f.name)}</div>
+        <div class="folder-meta">${count} карточк${pluralRu(count,'а','и','')}</div>
+      </div>
+      <div class="folder-actions">
+        <button class="icon-btn" title="Скачать проект" onclick="event.stopPropagation();downloadFolder('${f.id}')">⬇</button>
+        <button class="icon-btn" title="Удалить" onclick="event.stopPropagation();deleteFolder('${f.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="section-head">
+      <h2>Проекты</h2>
+      <button class="btn-add" onclick="openModal('modal-folder')">＋ Проект</button>
+    </div>
+    <div class="folder-list">${folderItems || '<div class="empty-state"><div class="big-icon">📂</div><p>Нет проектов. Создайте первый.</p></div>'}</div>
+    <div class="section-head" style="margin-top:8px">
+      <h2>Быстрый старт</h2>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:var(--text2);line-height:1.6">
+      1. Выберите проект или создайте новый<br>
+      2. Перейдите в <b>Создать</b> и загрузите .txt / .md файлы<br>
+      3. Нажмите «Создать карточки»<br>
+      4. Скачайте карточки или экспортируйте проект
+    </div>`;
+}
+function bindHomeEvents() {}
+
+function openFolder(id) {
+  state.activeFolderId = id;
+  showScreen('cards');
+}
+
+function deleteFolder(id) {
+  if (!confirm('Удалить проект и все его карточки?')) return;
+  state.folders = state.folders.filter(f => f.id !== id);
+  delete state.cards[id];
+  if (state.activeFolderId === id) state.activeFolderId = null;
+  saveState();
+  renderScreen();
+}
+
+function downloadFolder(id) {
+  const folder = state.folders.find(f => f.id === id);
+  const cards = state.cards[id] || [];
+  if (!cards.length) { showToast('В проекте нет карточек'); return; }
+  const html = buildExportHTML(folder, cards);
+  downloadBlob(html, `${folder.name.replace(/[^а-яёa-z0-9]/gi,'_')}_карточки.html`, 'text/html');
+  showToast('Проект скачан');
+}
+
+// ══════════════ GENERATE ══════════════
+function renderGenerate() {
+  const folderOpts = state.folders.map(f =>
+    `<option value="${f.id}" ${f.id === state.activeFolderId ? 'selected' : ''}>${f.emoji||'📁'} ${esc(f.name)}</option>`
+  ).join('');
+
+  return `
+    <div id="error-box" class="error-box"></div>
+    <div class="api-block">
+      <label>🔑 Google Gemini API ключ</label>
+      <div class="api-row">
+        <input type="password" id="key-input" placeholder="AIza..." value="${esc(GEMINI_API_KEY)}">
+        <button class="btn-sm" onclick="saveKey()">Сохранить</button>
+      </div>
+      <div id="key-status" class="api-status ${GEMINI_API_KEY ? 'ok' : 'err'}">${GEMINI_API_KEY ? '✓ Ключ сохранён' : '⚠ Ключ не введён'}</div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:6px">📂 Проект для сохранения</label>
+      <select id="folder-select" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;color:var(--text)">
+        ${folderOpts}
+      </select>
+    </div>
+
+    <div class="upload-box" id="upload-zone">
+      <div class="upload-icon">📄</div>
+      <p>Нажмите или перетащите файлы</p>
+      <span>.txt и .md — до 8 файлов</span>
+      <input type="file" id="file-inp" accept=".txt,.md,text/plain" multiple>
+    </div>
+    <div class="file-list" id="file-list"></div>
+
+    <div class="gen-options">
+      <div class="opt-group">
+        <label>Карточек на файл</label>
+        <select id="num-cards">
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+      <div class="opt-group">
+        <label>Формат занятия</label>
+        <select id="fmt-type">
+          <option value="семинара">Семинар</option>
+          <option value="лекции">Лекция</option>
+          <option value="практики">Практика</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-gen" id="gen-btn" onclick="startGenerate()" disabled>✦ Создать карточки</button>
+    <div class="loading-wrap" id="loading" style="display:none">
+      <div class="spinner"></div>
+      <p id="loading-msg">Анализирую текст...</p>
+    </div>`;
+}
+
+function bindGenEvents() {
+  const zone = document.getElementById('upload-zone');
+  const inp = document.getElementById('file-inp');
+  zone.addEventListener('click', () => inp.click());
+  inp.addEventListener('change', e => addFiles(Array.from(e.target.files)));
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); addFiles(Array.from(e.dataTransfer.files)); });
+  checkGenReady();
+}
+
+function addFiles(newFiles) {
+  newFiles.forEach(f => {
+    if (state.uploadedFiles.length >= 8) return;
+    if (!f.name.match(/\.(txt|md)$/i) && !f.type.includes('text')) return;
+    if (state.uploadedFiles.find(x => x.name === f.name)) return;
+    state.uploadedFiles.push(f);
+  });
+  renderFileList();
+  checkGenReady();
+}
+
+function renderFileList() {
+  const el = document.getElementById('file-list');
+  if (!el) return;
+  el.innerHTML = state.uploadedFiles.map((f, i) => `
+    <div class="file-item">
+      <span>📄</span>
+      <span class="fname">${esc(f.name)}</span>
+      <span class="fsize">${(f.size/1024).toFixed(1)} KB</span>
+      <span class="fdel" onclick="removeFile(${i})">✕</span>
+    </div>`).join('');
+}
+
+function removeFile(i) {
+  state.uploadedFiles.splice(i, 1);
+  renderFileList();
+  checkGenReady();
+}
+
+function checkGenReady() {
+  const btn = document.getElementById('gen-btn');
+  if (btn) btn.disabled = state.uploadedFiles.length === 0 || !GEMINI_API_KEY;
+}
+
+function saveKey() {
+  const val = document.getElementById('key-input').value.trim();
+  GEMINI_API_KEY = val;
+  localStorage.setItem(GEMINI_KEY_STORAGE, val);
+  const st = document.getElementById('key-status');
+  if (st) { st.textContent = val ? '✓ Ключ сохранён' : '⚠ Ключ не введён'; st.className = 'api-status ' + (val ? 'ok' : 'err'); }
+  updateApiDot();
+  checkGenReady();
+  showToast('Ключ сохранён');
+}
+
+async function startGenerate() {
+  const folderId = document.getElementById('folder-select').value;
+  const numCards = parseInt(document.getElementById('num-cards').value);
+  const fmt = document.getElementById('fmt-type').value;
+  const errBox = document.getElementById('error-box');
+  const loadEl = document.getElementById('loading');
+  const loadMsg = document.getElementById('loading-msg');
+  const genBtn = document.getElementById('gen-btn');
+
+  errBox.style.display = 'none';
+  loadEl.style.display = 'block';
+  genBtn.disabled = true;
+
+  const newCards = [];
+  try {
+    for (let i = 0; i < state.uploadedFiles.length; i++) {
+      const f = state.uploadedFiles[i];
+      loadMsg.textContent = `Обрабатываю файл ${i+1}/${state.uploadedFiles.length}: ${f.name}`;
+      const text = await readFile(f);
+      const cards = await callGemini(text, f.name, numCards, fmt);
+      cards.forEach(c => { c.id = uid(); c.source = f.name; c.created = Date.now(); c.folderId = folderId; });
+      newCards.push(...cards);
+    }
+    if (!state.cards[folderId]) state.cards[folderId] = [];
+    state.cards[folderId].push(...newCards);
+    saveState();
+    state.uploadedFiles = [];
+    state.activeFolderId = folderId;
+    loadEl.style.display = 'none';
+    showToast(`Создано ${newCards.length} карточек`);
+    showScreen('cards');
+  } catch(e) {
+    loadEl.style.display = 'none';
+    genBtn.disabled = false;
+    errBox.style.display = 'block';
+    errBox.textContent = '⚠ ' + e.message;
+  }
+}
+
+function readFile(f) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = () => rej(new Error('Ошибка чтения: ' + f.name));
+    r.readAsText(f, 'UTF-8');
+  });
+}
+
+async function callGemini(text, fname, numCards, fmt) {
+  const prompt = `Ты — помощник преподавателя. Проанализируй текст и создай структурированные карточки-подсказки для проведения ${fmt}.
+
+Создай ровно ${numCards} карточки. Верни ТОЛЬКО JSON массив, без пояснений, без markdown-обёртки.
+
+Каждая карточка:
+{
+  "title": "Краткое название темы (3-6 слов)",
+  "key_points": ["тезис 1 — глагольная фраза до 12 слов", "тезис 2", "тезис 3"],
+  "key_terms": ["термин: краткое определение 5-7 слов"],
+  "important_note": "Важный нюанс, 1-2 предложения.",
+  "note_type": "warn"
+}
+
+Правила:
+- key_points: от 2 до 6 тезисов — глагольные, конкретные, без воды
+- key_terms: 2-4 термина, специфичных для этой темы
+- important_note: нюанс, который студенты часто упускают
+- note_type: "warn" (предупреждение), "info" (подсказка), "danger" (запрет/ошибка)
+- Ответ — только JSON массив
+
+Текст (${fname}):
+${text.slice(0, 9000)}`;
+
+  const resp = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.35, maxOutputTokens: 2500 }
+      })
+    }
+  );
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    if (resp.status === 400) throw new Error('Неверный API ключ или запрос');
+    if (resp.status === 429) throw new Error('Превышен лимит запросов Gemini');
+    throw new Error(err.error?.message || `Ошибка Gemini API: ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const clean = raw.replace(/```json|```/g, '').trim();
+  try { return JSON.parse(clean); }
+  catch {
+    const m = clean.match(/\[[\s\S]*\]/);
+    if (m) return JSON.parse(m[0]);
+    throw new Error('Gemini вернул неверный формат. Попробуйте ещё раз.');
+  }
+}
+
+// ══════════════ CARDS ══════════════
+function renderCards() {
+  const folderId = state.activeFolderId;
+  const folder = folderId ? state.folders.find(f => f.id === folderId) : null;
+  const allCards = folderId ? (state.cards[folderId] || []) : Object.values(state.cards).flat();
+
+  if (!folderId) {
+    return `<div class="empty-state"><div class="big-icon">📂</div><p>Выберите проект на вкладке «Проекты»</p></div>`;
+  }
+
+  if (!allCards.length) {
+    return `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <span style="font-size:20px">${folder?.emoji||'📁'}</span>
+        <span style="font-size:16px;font-weight:600">${esc(folder?.name||'')}</span>
+      </div>
+      <div class="empty-state"><div class="big-icon">🃏</div><p>В этом проекте нет карточек.<br>Создайте их на вкладке «Создать».</p></div>`;
+  }
+
+  const toolbar = `<div class="cards-toolbar">
+    <button class="toolbar-btn primary-btn" onclick="downloadAllCards()">⬇ Скачать HTML</button>
+    <button class="toolbar-btn" onclick="downloadCardsJSON()">⬇ JSON</button>
+    <button class="toolbar-btn" onclick="copyAllText()">📋 Копировать текст</button>
+    <button class="toolbar-btn" onclick="clearFolderCards()" style="color:var(--danger);border-color:var(--danger)">✕ Очистить</button>
+  </div>`;
+
+  // Group by source file
+  const bySource = {};
+  allCards.forEach(c => {
+    const key = c.source || 'Без источника';
+    if (!bySource[key]) bySource[key] = [];
+    bySource[key].push(c);
+  });
+
+  let cardsHtml = '';
+  let globalIdx = 0;
+  Object.entries(bySource).forEach(([src, cards]) => {
+    cardsHtml += `<div class="cards-section">
+      <div class="cards-section-title">📄 ${esc(src)}</div>
+      <div class="cards-grid">`;
+    cards.forEach(card => {
+      globalIdx++;
+      cardsHtml += renderCard(card, globalIdx);
+    });
+    cardsHtml += `</div></div>`;
+  });
+
+  return `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span style="font-size:20px">${folder?.emoji||'📁'}</span>
+      <span style="font-size:16px;font-weight:600">${esc(folder?.name||'')}</span>
+      <span style="font-size:12px;color:var(--text3);margin-left:auto">${allCards.length} карт.</span>
+    </div>
+    ${toolbar}
+    <div id="error-box" class="error-box"></div>
+    ${cardsHtml}`;
+}
+
+function renderCard(card, idx) {
+  const pts = card.key_points || [];
+  const isHorizontal = pts.length <= 3;
+  const orientation = isHorizontal ? 'horizontal' : 'vertical';
+
+  const theses = pts.map(p => `<li>${esc(p)}</li>`).join('');
+  const terms = (card.key_terms || []).map(t => `<span class="term-pill">${esc(t)}</span>`).join('');
+  const noteType = card.note_type || 'info';
+  const noteLbls = { warn: '⚠ Важный нюанс', info: '💡 Подсказка', danger: '🚫 Запрет' };
+  const note = card.important_note ? `
+    <div class="card-note ${noteType}">
+      <div class="note-lbl">${noteLbls[noteType]||'Нюанс'}</div>
+      <div class="note-txt">${esc(card.important_note)}</div>
+    </div>` : '';
+
+  const termsBlock = terms ? `<div class="terms-wrap"><div class="sec-lbl">Термины</div>${terms}</div>` : '';
+
+  if (isHorizontal) {
+    return `<div class="sem-card horizontal" id="card-${card.id}">
+      <div class="card-header">
+        <div class="card-num">${idx}</div>
+        <div class="card-title-wrap">
+          <div class="card-title">${esc(card.title)}</div>
+          <span class="card-format-badge">↔ горизонтальная</span>
+        </div>
+        <div class="card-actions">
+          <button class="card-act-btn" title="Копировать" onclick="copyCard('${card.id}')">📋</button>
+          <button class="card-act-btn" title="Удалить" onclick="deleteCard('${card.id}')">✕</button>
+        </div>
+      </div>
+      <div class="card-theses">
+        <div class="sec-lbl">Тезисы</div>
+        <ul class="theses-list">${theses}</ul>
+      </div>
+      <div class="card-right">${termsBlock}</div>
+      ${note}
+    </div>`;
+  } else {
+    return `<div class="sem-card vertical" id="card-${card.id}">
+      <div class="card-header">
+        <div class="card-num">${idx}</div>
+        <div class="card-title-wrap">
+          <div class="card-title">${esc(card.title)}</div>
+          <span class="card-format-badge">↕ вертикальная</span>
+        </div>
+        <div class="card-actions">
+          <button class="card-act-btn" title="Копировать" onclick="copyCard('${card.id}')">📋</button>
+          <button class="card-act-btn" title="Удалить" onclick="deleteCard('${card.id}')">✕</button>
+        </div>
+      </div>
+      <div class="sec-lbl">Тезисы</div>
+      <ul class="theses-list">${theses}</ul>
+      <div class="card-right">${termsBlock}</div>
+      ${note}
+    </div>`;
+  }
+}
+
+function bindCardsEvents() {}
+
+function deleteCard(id) {
+  const fid = state.activeFolderId;
+  if (!fid) return;
+  state.cards[fid] = (state.cards[fid] || []).filter(c => c.id !== id);
+  saveState();
+  renderScreen();
+}
+
+function clearFolderCards() {
+  if (!confirm('Удалить все карточки в этом проекте?')) return;
+  state.cards[state.activeFolderId] = [];
+  saveState();
+  renderScreen();
+}
+
+function copyCard(id) {
+  const fid = state.activeFolderId;
+  const card = (state.cards[fid] || []).find(c => c.id === id);
+  if (!card) return;
+  const txt = [
+    card.title,
+    '',
+    ...(card.key_points||[]).map(p => '→ '+p),
+    '',
+    ...(card.key_terms||[]).map(t => '• '+t),
+    card.important_note ? '\n! '+card.important_note : ''
+  ].join('\n');
+  navigator.clipboard.writeText(txt).catch(()=>{});
+  showToast('Карточка скопирована');
+}
+
+function copyAllText() {
+  const fid = state.activeFolderId;
+  const cards = state.cards[fid] || [];
+  const txt = cards.map((c,i) => [
+    `[${i+1}] ${c.title}`,
+    ...(c.key_points||[]).map(p=>'→ '+p),
+    ...(c.key_terms||[]).map(t=>'• '+t),
+    c.important_note ? '! '+c.important_note : ''
+  ].filter(Boolean).join('\n')).join('\n\n---\n\n');
+  navigator.clipboard.writeText(txt).catch(()=>{});
+  showToast('Все карточки скопированы');
+}
+
+function downloadAllCards() {
+  const fid = state.activeFolderId;
+  const folder = state.folders.find(f => f.id === fid);
+  const cards = state.cards[fid] || [];
+  if (!cards.length) { showToast('Нет карточек для скачивания'); return; }
+  const html = buildExportHTML(folder, cards);
+  downloadBlob(html, `${(folder?.name||'карточки').replace(/[^а-яёa-z0-9]/gi,'_')}_карточки.html`, 'text/html');
+  showToast('HTML скачан');
+}
+
+function downloadCardsJSON() {
+  const fid = state.activeFolderId;
+  const folder = state.folders.find(f => f.id === fid);
+  const cards = state.cards[fid] || [];
+  if (!cards.length) { showToast('Нет карточек'); return; }
+  const json = JSON.stringify({ folder: folder?.name, cards }, null, 2);
+  downloadBlob(json, `${(folder?.name||'cards').replace(/[^а-яёa-z0-9]/gi,'_')}.json`, 'application/json');
+  showToast('JSON скачан');
+}
+
+function buildExportHTML(folder, cards) {
+  const cardsHtml = cards.map((card, i) => {
+    const pts = card.key_points || [];
+    const isH = pts.length <= 3;
+    const theses = pts.map(p => `<li>${p}</li>`).join('');
+    const terms = (card.key_terms||[]).map(t => `<span class="tp">${t}</span>`).join('');
+    const noteColors = { warn: '#fff8e1;border-left:3px solid #f9ab00', info: '#e8f0fe;border-left:3px solid #1a73e8', danger: '#fce8e6;border-left:3px solid #d93025' };
+    const nc = noteColors[card.note_type||'info'];
+    const note = card.important_note ? `<div style="background:${nc};padding:8px 11px;border-radius:0 6px 6px 0;margin-top:10px;font-size:12px">${card.important_note}</div>` : '';
+
+    if (isH) return `
+      <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
+        <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div class="num">${i+1}</div>
+          <b style="font-size:15px">${card.title}</b>
+          <span style="font-size:10px;background:#e8f0fe;color:#1a73e8;padding:2px 7px;border-radius:20px;margin-left:auto">↔</span>
+        </div>
+        <div><div class="lbl">Тезисы</div><ul class="tl">${theses}</ul></div>
+        <div>${terms ? `<div class="lbl">Термины</div>${terms}` : ''}</div>
+        <div style="grid-column:1/-1">${note}</div>
+      </div>`;
+    return `
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div class="num">${i+1}</div>
+          <b style="font-size:15px">${card.title}</b>
+          <span style="font-size:10px;background:#e8f0fe;color:#1a73e8;padding:2px 7px;border-radius:20px;margin-left:auto">↕</span>
+        </div>
+        <div class="lbl">Тезисы</div>
+        <ul class="tl">${theses}</ul>
+        ${terms ? `<div style="margin-top:10px"><div class="lbl">Термины</div>${terms}</div>` : ''}
+        ${note}
+      </div>`;
+  }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${folder?.name||'Карточки'} — Семинар</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#1a1a1a;padding:20px;max-width:900px;margin:0 auto}
+h1{font-size:22px;margin-bottom:6px}
+.meta{font-size:13px;color:#888;margin-bottom:20px}
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.num{width:28px;height:28px;border-radius:50%;background:#e8f0fe;color:#1a73e8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#999;margin-bottom:6px}
+.tl{list-style:none;padding:0}
+.tl li{font-size:13px;line-height:1.55;padding:5px 0 5px 16px;position:relative;border-bottom:1px solid #f0f0f0}
+.tl li:last-child{border-bottom:none}
+.tl li::before{content:"→";position:absolute;left:0;color:#1a73e8;font-size:12px}
+.tp{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;background:#e8f0fe;color:#1a73e8;margin:2px}
+@media print{body{background:#fff;padding:10px}.card{break-inside:avoid;box-shadow:none}}
+</style></head><body>
+<h1>${folder?.emoji||''} ${folder?.name||'Карточки'}</h1>
+<div class="meta">Создано: ${new Date().toLocaleDateString('ru')} · ${cards.length} карточек</div>
+${cardsHtml}
+</body></html>`;
+}
+
+function downloadBlob(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+// ══════════════ SETTINGS ══════════════
+function renderSettings() {
+  return `
+    <h2 style="font-size:16px;font-weight:600;margin-bottom:16px">Настройки</h2>
+
+    <div class="api-block" style="margin-bottom:14px">
+      <label>🔑 Google Gemini API ключ</label>
+      <div class="api-row">
+        <input type="password" id="skey-input" placeholder="AIza..." value="${esc(GEMINI_API_KEY)}">
+        <button class="btn-sm" onclick="saveKeyFromSettings()">Сохранить</button>
+      </div>
+      <div id="skey-status" class="api-status ${GEMINI_API_KEY ? 'ok' : 'err'}">${GEMINI_API_KEY ? '✓ Ключ сохранён' : '⚠ Ключ не введён'}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">Ключ хранится локально в браузере, не передаётся третьим лицам</div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:500;margin-bottom:10px">📊 Статистика</div>
+      <div style="font-size:13px;color:var(--text2);line-height:2">
+        Проектов: <b style="color:var(--text)">${state.folders.length}</b><br>
+        Всего карточек: <b style="color:var(--text)">${Object.values(state.cards).flat().length}</b>
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:500;margin-bottom:10px">⬇ Экспорт всех данных</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" onclick="exportAll()">Скачать всё (JSON)</button>
+        <button class="btn-sm" onclick="exportAllHTML()">Скачать HTML</button>
+      </div>
+    </div>
+
+    <div style="background:var(--danger-light);border:1px solid var(--danger);border-radius:var(--radius);padding:14px">
+      <div style="font-size:14px;font-weight:500;color:var(--danger);margin-bottom:10px">⚠ Опасная зона</div>
+      <button style="padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--danger);background:none;color:var(--danger)" onclick="resetAll()">Сбросить все данные</button>
+    </div>`;
+}
+
+function bindSettingsEvents() {}
+
+function saveKeyFromSettings() {
+  const val = document.getElementById('skey-input').value.trim();
+  GEMINI_API_KEY = val;
+  localStorage.setItem(GEMINI_KEY_STORAGE, val);
+  const st = document.getElementById('skey-status');
+  if (st) { st.textContent = val ? '✓ Ключ сохранён' : '⚠ Ключ не введён'; st.className = 'api-status '+(val?'ok':'err'); }
+  updateApiDot();
+  showToast('Ключ сохранён');
+}
+
+function exportAll() {
+  const data = { folders: state.folders, cards: state.cards, exported: new Date().toISOString() };
+  downloadBlob(JSON.stringify(data, null, 2), 'seminar_cards_backup.json', 'application/json');
+  showToast('Резервная копия скачана');
+}
+
+function exportAllHTML() {
+  let allHtml = '';
+  state.folders.forEach(f => {
+    const cards = state.cards[f.id] || [];
+    if (cards.length) allHtml += buildExportHTML(f, cards);
+  });
+  if (!allHtml) { showToast('Нет карточек для экспорта'); return; }
+  downloadBlob(allHtml, 'seminar_all_cards.html', 'text/html');
+  showToast('HTML скачан');
+}
+
+function resetAll() {
+  if (!confirm('Удалить ВСЕ проекты и карточки? Это нельзя отменить.')) return;
+  localStorage.removeItem('sem_folders');
+  localStorage.removeItem('sem_cards');
+  state.folders = [{ id: uid(), name: 'Общее', emoji: '📚', created: Date.now() }];
+  state.cards = {};
+  state.activeFolderId = null;
+  saveState();
+  showScreen('home');
+  showToast('Данные сброшены');
+}
+
+// ══════════════ MODALS ══════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function createFolder() {
+  const name = document.getElementById('folder-name-input').value.trim();
+  if (!name) return;
+  const emoji = document.getElementById('folder-emoji-input').value.trim() || '📁';
+  state.folders.push({ id: uid(), name, emoji, created: Date.now() });
+  saveState();
+  document.getElementById('folder-name-input').value = '';
+  document.getElementById('folder-emoji-input').value = '';
+  closeModal('modal-folder');
+  renderScreen();
+  showToast('Проект создан');
+}
+
+// ══════════════ UTILS ══════════════
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function pluralRu(n, a, b, c) {
+  const m = n % 100;
+  if (m >= 11 && m <= 19) return n + ' ' + c;
+  switch (n % 10) { case 1: return n + ' ' + a; case 2: case 3: case 4: return n + ' ' + b; default: return n + ' ' + c; }
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function updateApiDot() {
+  const dot = document.getElementById('api-dot');
+  if (dot) dot.style.background = GEMINI_API_KEY ? 'var(--success)' : 'var(--border)';
+}
+
+// ══════════════ INIT ══════════════
+if (window.Telegram?.WebApp) {
+  window.Telegram.WebApp.ready();
+  window.Telegram.WebApp.expand();
+}
+showScreen('home');
+</script>
+</body>
+</html>
