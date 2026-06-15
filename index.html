@@ -84,6 +84,22 @@ body { overflow-x: hidden; }
 .api-status.ok { color: var(--success); }
 .api-status.err { color: var(--danger); }
 
+/* ── AI config block ── */
+.ai-block { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; margin-bottom: 16px; }
+.ai-block-label { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+.provider-switch { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 10px; }
+.prov-btn { flex: 1; padding: 8px 4px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text2); transition: all 0.15s; }
+.prov-btn.active { background: var(--surface); color: var(--accent); box-shadow: var(--card-shadow); }
+.ai-model-select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 11px; font-size: 13px; color: var(--text); }
+.ai-model-select:focus { outline: none; border-color: var(--accent); }
+.ai-hint { font-size: 11px; color: var(--text3); margin-top: 8px; line-height: 1.45; }
+.ai-badge { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px; background: var(--accent-light); color: var(--accent); flex-shrink: 0; }
+
+/* ── Step labels & info cards ── */
+.step-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 8px; }
+.info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+.info-card-title { font-size: 14px; font-weight: 500; margin-bottom: 10px; }
+
 /* ── Project folders ── */
 .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .section-head h2 { font-size: 14px; font-weight: 600; color: var(--text); }
@@ -273,6 +289,7 @@ input[type=file] { display: none; }
       <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
     </svg>
     <span class="topbar-title">Карточки семинара</span>
+    <span id="ai-badge" class="ai-badge" style="display:none"></span>
     <div id="api-dot" style="width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0" title="Статус API"></div>
   </div>
 
@@ -320,10 +337,50 @@ input[type=file] { display: none; }
 
 <script>
 // ═══════════════════════════════════════════════
-// CONFIG — вставь свой ключ сюда:
+// CONFIG — выбор ИИ-провайдера и моделей
 // ═══════════════════════════════════════════════
-const GEMINI_KEY_STORAGE = 'seminar_gemini_key';
-let GEMINI_API_KEY = localStorage.getItem(GEMINI_KEY_STORAGE) || '';
+const MODELS = {
+  gemini: [
+    { id: 'gemini-2.5-flash', label: '⚡ Gemini 2.5 Flash — быстрая, бесплатный лимит' },
+    { id: 'gemini-2.5-pro',   label: '✨ Gemini 2.5 Pro — выше качество' },
+    { id: 'gemini-3.5-flash', label: '🚀 Gemini 3.5 Flash — новейшая' },
+  ],
+  claude: [
+    { id: 'claude-haiku-4-5-20251001', label: '⚡ Claude Haiku 4.5 — быстрая, дешёвая' },
+    { id: 'claude-sonnet-4-6',         label: '✨ Claude Sonnet 4.6 — сбалансированная' },
+    { id: 'claude-opus-4-8',           label: '🚀 Claude Opus 4.8 — максимум качества' },
+  ],
+};
+const PROVIDER_INFO = {
+  gemini: {
+    name: 'Google Gemini',
+    placeholder: 'AIza...',
+    keyHint: 'Бесплатный ключ: aistudio.google.com/apikey (есть бесплатный лимит запросов).',
+  },
+  claude: {
+    name: 'Anthropic Claude',
+    placeholder: 'sk-ant-...',
+    keyHint: 'Ключ: console.anthropic.com → Billing. ~$5 кредитов на старте, далее оплата по токенам. Подписка Claude Pro НЕ даёт доступ к API.',
+  },
+};
+
+const CFG_STORAGE = 'seminar_ai_cfg';
+let aiCfg = (() => {
+  const saved = JSON.parse(localStorage.getItem(CFG_STORAGE) || 'null');
+  if (saved) return saved;
+  // миграция со старой версии (только ключ Gemini)
+  return {
+    provider: 'gemini',
+    geminiKey: localStorage.getItem('seminar_gemini_key') || '',
+    claudeKey: '',
+    geminiModel: 'gemini-2.5-flash',
+    claudeModel: 'claude-haiku-4-5-20251001',
+  };
+})();
+function saveCfg() { localStorage.setItem(CFG_STORAGE, JSON.stringify(aiCfg)); }
+function curKey()   { return aiCfg.provider === 'claude' ? aiCfg.claudeKey : aiCfg.geminiKey; }
+function curModel() { return aiCfg.provider === 'claude' ? aiCfg.claudeModel : aiCfg.geminiModel; }
+function hasKey()   { return !!curKey(); }
 
 // ── State ──
 let state = {
@@ -368,6 +425,60 @@ function renderScreen() {
   updateApiDot();
 }
 
+// ══════════════ AI CONFIG BLOCK ══════════════
+// Общий блок выбора провайдера + модели + ключа. ctx = 'gen' | 'set' (для уникальных id)
+function aiConfigHTML(ctx) {
+  const info = PROVIDER_INFO[aiCfg.provider];
+  const modelOpts = MODELS[aiCfg.provider].map(m =>
+    `<option value="${m.id}" ${m.id === curModel() ? 'selected' : ''}>${m.label}</option>`
+  ).join('');
+  const ok = hasKey();
+  return `
+    <div class="ai-block">
+      <div class="ai-block-label">🤖 ИИ-модель</div>
+
+      <div class="provider-switch">
+        <button class="prov-btn ${aiCfg.provider === 'gemini' ? 'active' : ''}" onclick="setProvider('gemini','${ctx}')">Google Gemini</button>
+        <button class="prov-btn ${aiCfg.provider === 'claude' ? 'active' : ''}" onclick="setProvider('claude','${ctx}')">Anthropic Claude</button>
+      </div>
+
+      <select class="ai-model-select" id="model-${ctx}" onchange="setModel(this.value)">
+        ${modelOpts}
+      </select>
+
+      <div class="api-row" style="margin-top:8px">
+        <input type="password" id="key-${ctx}" placeholder="${info.placeholder}" value="${esc(curKey())}">
+        <button class="btn-sm" onclick="saveAIKey('${ctx}')">Сохранить</button>
+      </div>
+      <div id="keystatus-${ctx}" class="api-status ${ok ? 'ok' : 'err'}">${ok ? '✓ Ключ сохранён' : '⚠ Введите ключ ' + info.name}</div>
+      <div class="ai-hint">${info.keyHint}</div>
+    </div>`;
+}
+
+function setProvider(p, ctx) {
+  aiCfg.provider = p;
+  saveCfg();
+  // перерисовываем текущий экран, чтобы обновить блок и опции
+  renderScreen();
+}
+function setModel(v) {
+  if (aiCfg.provider === 'claude') aiCfg.claudeModel = v; else aiCfg.geminiModel = v;
+  saveCfg();
+}
+function saveAIKey(ctx) {
+  const val = (document.getElementById('key-' + ctx)?.value || '').trim();
+  if (aiCfg.provider === 'claude') aiCfg.claudeKey = val; else aiCfg.geminiKey = val;
+  saveCfg();
+  const st = document.getElementById('keystatus-' + ctx);
+  if (st) {
+    st.textContent = val ? '✓ Ключ сохранён' : '⚠ Введите ключ ' + PROVIDER_INFO[aiCfg.provider].name;
+    st.className = 'api-status ' + (val ? 'ok' : 'err');
+  }
+  updateApiDot();
+  checkGenReady();
+  showToast('Ключ сохранён');
+}
+
 // ══════════════ HOME ══════════════
 function renderHome() {
   const folders = state.folders;
@@ -395,11 +506,11 @@ function renderHome() {
     <div class="section-head" style="margin-top:8px">
       <h2>Быстрый старт</h2>
     </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:var(--text2);line-height:1.6">
-      1. Выберите проект или создайте новый<br>
-      2. Перейдите в <b>Создать</b> и загрузите .txt / .md файлы<br>
-      3. Нажмите «Создать карточки»<br>
-      4. Скачайте карточки или экспортируйте проект
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:var(--text2);line-height:1.7">
+      1. На вкладке <b>Создать</b> выберите ИИ (Gemini или Claude) и вставьте API-ключ<br>
+      2. Загрузите .txt / .md или фото конспекта<br>
+      3. Выберите проект и нажмите «Создать карточки»<br>
+      4. Скачайте карточки (HTML / JSON) или экспортируйте проект
     </div>`;
 }
 function bindHomeEvents() {}
@@ -435,22 +546,17 @@ function renderGenerate() {
 
   return `
     <div id="error-box" class="error-box"></div>
-    <div class="api-block">
-      <label>🔑 Google Gemini API ключ</label>
-      <div class="api-row">
-        <input type="password" id="key-input" placeholder="AIza..." value="${esc(GEMINI_API_KEY)}">
-        <button class="btn-sm" onclick="saveKey()">Сохранить</button>
-      </div>
-      <div id="key-status" class="api-status ${GEMINI_API_KEY ? 'ok' : 'err'}">${GEMINI_API_KEY ? '✓ Ключ сохранён' : '⚠ Ключ не введён'}</div>
-    </div>
 
-    <div style="margin-bottom:12px">
-      <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:6px">📂 Проект для сохранения</label>
-      <select id="folder-select" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;color:var(--text)">
+    ${aiConfigHTML('gen')}
+
+    <div class="step-label">📂 Куда сохранить</div>
+    <div style="margin-bottom:14px">
+      <select id="folder-select" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 11px;font-size:14px;color:var(--text)">
         ${folderOpts}
       </select>
     </div>
 
+    <div class="step-label">📄 Загрузите материал</div>
     <div class="upload-box" id="upload-zone">
       <div class="upload-icon">📄</div>
       <p>Перетащите файлы сюда</p>
@@ -468,6 +574,7 @@ function renderGenerate() {
     <input type="file" id="file-inp-photo" accept="image/*" capture="environment" multiple style="display:none">
     <div class="file-list" id="file-list"></div>
 
+    <div class="step-label">⚙️ Параметры</div>
     <div class="gen-options">
       <div class="opt-group">
         <label>Карточек на файл</label>
@@ -541,19 +648,10 @@ function removeFile(i) {
 
 function checkGenReady() {
   const btn = document.getElementById('gen-btn');
-  if (btn) btn.disabled = state.uploadedFiles.length === 0 || !GEMINI_API_KEY;
+  if (btn) btn.disabled = state.uploadedFiles.length === 0 || !hasKey();
 }
 
-function saveKey() {
-  const val = document.getElementById('key-input').value.trim();
-  GEMINI_API_KEY = val;
-  localStorage.setItem(GEMINI_KEY_STORAGE, val);
-  const st = document.getElementById('key-status');
-  if (st) { st.textContent = val ? '✓ Ключ сохранён' : '⚠ Ключ не введён'; st.className = 'api-status ' + (val ? 'ok' : 'err'); }
-  updateApiDot();
-  checkGenReady();
-  showToast('Ключ сохранён');
-}
+function saveKey() { /* устарело — используется saveAIKey */ }
 
 async function startGenerate() {
   const folderId = document.getElementById('folder-select').value;
@@ -574,7 +672,7 @@ async function startGenerate() {
       const f = state.uploadedFiles[i];
       loadMsg.textContent = `Обрабатываю файл ${i+1}/${state.uploadedFiles.length}: ${f.name}`;
       const content = await readFile(f);
-      const cards = await callGemini(content, f.name, numCards, fmt);
+      const cards = await callAI(content, f.name, numCards, fmt);
       cards.forEach(c => { c.id = uid(); c.source = f.name; c.created = Date.now(); c.folderId = folderId; });
       newCards.push(...cards);
     }
@@ -609,8 +707,8 @@ function readFile(f) {
   });
 }
 
-async function callGemini(content, fname, numCards, fmt) {
-  const prompt = `Ты — помощник преподавателя. Проанализируй ${content.type === 'image' ? 'изображение с текстом/конспектом' : 'текст'} и создай структурированные карточки-подсказки для проведения ${fmt}.
+function buildPrompt(content, fname, numCards, fmt) {
+  let p = `Ты — помощник преподавателя. Проанализируй ${content.type === 'image' ? 'изображение с текстом/конспектом' : 'текст'} и создай структурированные карточки-подсказки для проведения ${fmt}.
 
 Создай ровно ${numCards} карточки. Верни ТОЛЬКО JSON массив, без пояснений, без markdown-обёртки.
 
@@ -629,19 +727,34 @@ async function callGemini(content, fname, numCards, fmt) {
 - important_note: нюанс, который студенты часто упускают
 - note_type: "warn" (предупреждение), "info" (подсказка), "danger" (запрет/ошибка)
 - Ответ — только JSON массив`;
+  if (content.type !== 'image') p += `\n\nТекст (${fname}):\n${content.data.slice(0, 9000)}`;
+  return p;
+}
 
-  let parts;
-  if (content.type === 'image') {
-    parts = [
-      { text: prompt },
-      { inline_data: { mime_type: content.mime, data: content.data } }
-    ];
-  } else {
-    parts = [{ text: prompt + `\n\nТекст (${fname}):\n${content.data.slice(0, 9000)}` }];
+function parseCardsJSON(raw) {
+  const clean = (raw || '').replace(/```json|```/g, '').trim();
+  try { return JSON.parse(clean); }
+  catch {
+    const m = clean.match(/\[[\s\S]*\]/);
+    if (m) return JSON.parse(m[0]);
+    throw new Error('Модель вернула неверный формат. Попробуйте ещё раз или смените модель.');
   }
+}
+
+// Маршрутизатор: вызывает выбранного провайдера
+async function callAI(content, fname, numCards, fmt) {
+  const prompt = buildPrompt(content, fname, numCards, fmt);
+  if (aiCfg.provider === 'claude') return callClaude(prompt, content);
+  return callGemini(prompt, content);
+}
+
+async function callGemini(prompt, content) {
+  const parts = content.type === 'image'
+    ? [{ text: prompt }, { inline_data: { mime_type: content.mime, data: content.data } }]
+    : [{ text: prompt }];
 
   const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${aiCfg.geminiModel}:generateContent?key=${encodeURIComponent(aiCfg.geminiKey)}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -654,20 +767,53 @@ async function callGemini(content, fname, numCards, fmt) {
 
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
-    if (resp.status === 400) throw new Error('Неверный API ключ или запрос');
-    if (resp.status === 429) throw new Error('Превышен лимит запросов Gemini');
+    if (resp.status === 400) throw new Error(err.error?.message || 'Неверный API-ключ Gemini или запрос');
+    if (resp.status === 404) throw new Error(`Модель ${aiCfg.geminiModel} недоступна. Выберите другую.`);
+    if (resp.status === 429) throw new Error('Превышен лимит запросов Gemini. Подождите немного.');
     throw new Error(err.error?.message || `Ошибка Gemini API: ${resp.status}`);
   }
 
   const data = await resp.json();
   const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  const clean = raw.replace(/```json|```/g, '').trim();
-  try { return JSON.parse(clean); }
-  catch {
-    const m = clean.match(/\[[\s\S]*\]/);
-    if (m) return JSON.parse(m[0]);
-    throw new Error('Gemini вернул неверный формат. Попробуйте ещё раз.');
+  return parseCardsJSON(raw);
+}
+
+async function callClaude(prompt, content) {
+  const userContent = content.type === 'image'
+    ? [
+        { type: 'image', source: { type: 'base64', media_type: content.mime, data: content.data } },
+        { type: 'text', text: prompt }
+      ]
+    : [{ type: 'text', text: prompt }];
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': aiCfg.claudeKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: aiCfg.claudeModel,
+      max_tokens: 2500,
+      temperature: 0.35,
+      messages: [{ role: 'user', content: userContent }]
+    })
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    if (resp.status === 401) throw new Error('Неверный API-ключ Claude. Проверьте ключ в console.anthropic.com.');
+    if (resp.status === 400) throw new Error(err.error?.message || 'Неверный запрос или модель Claude.');
+    if (resp.status === 429) throw new Error('Превышен лимит запросов Claude. Подождите немного.');
+    if (resp.status === 402 || resp.status === 403) throw new Error('Недостаточно кредитов на балансе Anthropic API.');
+    throw new Error(err.error?.message || `Ошибка Claude API: ${resp.status}`);
   }
+
+  const data = await resp.json();
+  const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+  return parseCardsJSON(raw);
 }
 
 // ══════════════ CARDS ══════════════
@@ -924,26 +1070,27 @@ function renderSettings() {
   return `
     <h2 style="font-size:16px;font-weight:600;margin-bottom:16px">Настройки</h2>
 
-    <div class="api-block" style="margin-bottom:14px">
-      <label>🔑 Google Gemini API ключ</label>
-      <div class="api-row">
-        <input type="password" id="skey-input" placeholder="AIza..." value="${esc(GEMINI_API_KEY)}">
-        <button class="btn-sm" onclick="saveKeyFromSettings()">Сохранить</button>
+    ${aiConfigHTML('set')}
+
+    <div class="info-card" style="margin-bottom:14px">
+      <div class="info-card-title">ℹ️ Какую модель выбрать</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.65">
+        <b>Gemini</b> — есть бесплатный лимит в Google AI Studio, удобно для старта.<br>
+        <b>Claude</b> — оплата по токенам (~$5 кредитов новым аккаунтам). Подписка Claude&nbsp;Pro доступ к API не даёт.<br>
+        Для большинства задач хватает «быстрой» модели; «pro/opus» — для сложных текстов.
       </div>
-      <div id="skey-status" class="api-status ${GEMINI_API_KEY ? 'ok' : 'err'}">${GEMINI_API_KEY ? '✓ Ключ сохранён' : '⚠ Ключ не введён'}</div>
-      <div style="font-size:11px;color:var(--text3);margin-top:6px">Ключ хранится локально в браузере, не передаётся третьим лицам</div>
     </div>
 
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px">
-      <div style="font-size:14px;font-weight:500;margin-bottom:10px">📊 Статистика</div>
+    <div class="info-card" style="margin-bottom:14px">
+      <div class="info-card-title">📊 Статистика</div>
       <div style="font-size:13px;color:var(--text2);line-height:2">
         Проектов: <b style="color:var(--text)">${state.folders.length}</b><br>
         Всего карточек: <b style="color:var(--text)">${Object.values(state.cards).flat().length}</b>
       </div>
     </div>
 
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px">
-      <div style="font-size:14px;font-weight:500;margin-bottom:10px">⬇ Экспорт всех данных</div>
+    <div class="info-card" style="margin-bottom:14px">
+      <div class="info-card-title">⬇ Экспорт всех данных</div>
       <div style="display:flex;gap:8px">
         <button class="btn-sm" onclick="exportAll()">Скачать всё (JSON)</button>
         <button class="btn-sm" onclick="exportAllHTML()">Скачать HTML</button>
@@ -957,16 +1104,6 @@ function renderSettings() {
 }
 
 function bindSettingsEvents() {}
-
-function saveKeyFromSettings() {
-  const val = document.getElementById('skey-input').value.trim();
-  GEMINI_API_KEY = val;
-  localStorage.setItem(GEMINI_KEY_STORAGE, val);
-  const st = document.getElementById('skey-status');
-  if (st) { st.textContent = val ? '✓ Ключ сохранён' : '⚠ Ключ не введён'; st.className = 'api-status '+(val?'ok':'err'); }
-  updateApiDot();
-  showToast('Ключ сохранён');
-}
 
 function exportAll() {
   const data = { folders: state.folders, cards: state.cards, exported: new Date().toISOString() };
@@ -1030,7 +1167,15 @@ function showToast(msg) {
 }
 function updateApiDot() {
   const dot = document.getElementById('api-dot');
-  if (dot) dot.style.background = GEMINI_API_KEY ? 'var(--success)' : 'var(--border)';
+  if (dot) {
+    dot.style.background = hasKey() ? 'var(--success)' : 'var(--border)';
+    dot.title = hasKey() ? `${PROVIDER_INFO[aiCfg.provider].name}: ${curModel()}` : 'Ключ не введён';
+  }
+  const badge = document.getElementById('ai-badge');
+  if (badge) {
+    badge.textContent = aiCfg.provider === 'claude' ? 'Claude' : 'Gemini';
+    badge.style.display = hasKey() ? 'inline-block' : 'none';
+  }
 }
 
 // ══════════════ INIT ══════════════
