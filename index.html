@@ -453,10 +453,19 @@ function renderGenerate() {
 
     <div class="upload-box" id="upload-zone">
       <div class="upload-icon">📄</div>
-      <p>Нажмите или перетащите файлы</p>
+      <p>Перетащите файлы сюда</p>
       <span>.txt и .md — до 8 файлов</span>
-      <input type="file" id="file-inp" accept=".txt,.md,text/plain" multiple>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <button onclick="document.getElementById('file-inp-doc').click()" style="padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);display:flex;align-items:center;justify-content:center;gap:6px">
+        📄 Документ
+      </button>
+      <button onclick="document.getElementById('file-inp-photo').click()" style="padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);display:flex;align-items:center;justify-content:center;gap:6px">
+        📷 Фото / Камера
+      </button>
+    </div>
+    <input type="file" id="file-inp-doc" accept=".txt,.md,text/plain" multiple style="display:none">
+    <input type="file" id="file-inp-photo" accept="image/*" capture="environment" multiple style="display:none">
     <div class="file-list" id="file-list"></div>
 
     <div class="gen-options">
@@ -488,9 +497,11 @@ function renderGenerate() {
 
 function bindGenEvents() {
   const zone = document.getElementById('upload-zone');
-  const inp = document.getElementById('file-inp');
-  zone.addEventListener('click', () => inp.click());
-  inp.addEventListener('change', e => addFiles(Array.from(e.target.files)));
+  const inpDoc = document.getElementById('file-inp-doc');
+  const inpPhoto = document.getElementById('file-inp-photo');
+  zone.addEventListener('click', () => inpDoc.click());
+  inpDoc.addEventListener('change', e => addFiles(Array.from(e.target.files)));
+  inpPhoto.addEventListener('change', e => addFiles(Array.from(e.target.files)));
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
   zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
   zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); addFiles(Array.from(e.dataTransfer.files)); });
@@ -500,7 +511,9 @@ function bindGenEvents() {
 function addFiles(newFiles) {
   newFiles.forEach(f => {
     if (state.uploadedFiles.length >= 8) return;
-    if (!f.name.match(/\.(txt|md)$/i) && !f.type.includes('text')) return;
+    const isText = f.name.match(/\.(txt|md)$/i) || f.type.includes('text');
+    const isImage = f.type.startsWith('image/');
+    if (!isText && !isImage) return;
     if (state.uploadedFiles.find(x => x.name === f.name)) return;
     state.uploadedFiles.push(f);
   });
@@ -513,7 +526,7 @@ function renderFileList() {
   if (!el) return;
   el.innerHTML = state.uploadedFiles.map((f, i) => `
     <div class="file-item">
-      <span>📄</span>
+      <span>${f.type.startsWith('image/') ? '🖼' : '📄'}</span>
       <span class="fname">${esc(f.name)}</span>
       <span class="fsize">${(f.size/1024).toFixed(1)} KB</span>
       <span class="fdel" onclick="removeFile(${i})">✕</span>
@@ -560,8 +573,8 @@ async function startGenerate() {
     for (let i = 0; i < state.uploadedFiles.length; i++) {
       const f = state.uploadedFiles[i];
       loadMsg.textContent = `Обрабатываю файл ${i+1}/${state.uploadedFiles.length}: ${f.name}`;
-      const text = await readFile(f);
-      const cards = await callGemini(text, f.name, numCards, fmt);
+      const content = await readFile(f);
+      const cards = await callGemini(content, f.name, numCards, fmt);
       cards.forEach(c => { c.id = uid(); c.source = f.name; c.created = Date.now(); c.folderId = folderId; });
       newCards.push(...cards);
     }
@@ -584,14 +597,20 @@ async function startGenerate() {
 function readFile(f) {
   return new Promise((res, rej) => {
     const r = new FileReader();
-    r.onload = e => res(e.target.result);
-    r.onerror = () => rej(new Error('Ошибка чтения: ' + f.name));
-    r.readAsText(f, 'UTF-8');
+    if (f.type.startsWith('image/')) {
+      r.onload = e => res({ type: 'image', data: e.target.result.split(',')[1], mime: f.type });
+      r.onerror = () => rej(new Error('Ошибка чтения: ' + f.name));
+      r.readAsDataURL(f);
+    } else {
+      r.onload = e => res({ type: 'text', data: e.target.result });
+      r.onerror = () => rej(new Error('Ошибка чтения: ' + f.name));
+      r.readAsText(f, 'UTF-8');
+    }
   });
 }
 
-async function callGemini(text, fname, numCards, fmt) {
-  const prompt = `Ты — помощник преподавателя. Проанализируй текст и создай структурированные карточки-подсказки для проведения ${fmt}.
+async function callGemini(content, fname, numCards, fmt) {
+  const prompt = `Ты — помощник преподавателя. Проанализируй ${content.type === 'image' ? 'изображение с текстом/конспектом' : 'текст'} и создай структурированные карточки-подсказки для проведения ${fmt}.
 
 Создай ровно ${numCards} карточки. Верни ТОЛЬКО JSON массив, без пояснений, без markdown-обёртки.
 
@@ -609,10 +628,17 @@ async function callGemini(text, fname, numCards, fmt) {
 - key_terms: 2-4 термина, специфичных для этой темы
 - important_note: нюанс, который студенты часто упускают
 - note_type: "warn" (предупреждение), "info" (подсказка), "danger" (запрет/ошибка)
-- Ответ — только JSON массив
+- Ответ — только JSON массив`;
 
-Текст (${fname}):
-${text.slice(0, 9000)}`;
+  let parts;
+  if (content.type === 'image') {
+    parts = [
+      { text: prompt },
+      { inline_data: { mime_type: content.mime, data: content.data } }
+    ];
+  } else {
+    parts = [{ text: prompt + `\n\nТекст (${fname}):\n${content.data.slice(0, 9000)}` }];
+  }
 
   const resp = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -620,7 +646,7 @@ ${text.slice(0, 9000)}`;
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
+        contents: [{ parts }],
         generationConfig: { temperature: 0.35, maxOutputTokens: 2500 }
       })
     }
