@@ -278,6 +278,44 @@ input[type=file] { display: none; }
 }
 .nav-item svg { width: 22px; height: 22px; }
 .nav-item.active { color: var(--accent); }
+
+/* ── Presentation mode ── */
+.pres-overlay { display: none; position: fixed; inset: 0; z-index: 500; background: #0d0f14; color: #fff; flex-direction: column; }
+.pres-overlay.open { display: flex; }
+.pres-bar { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.12); flex-shrink: 0; }
+.pres-folder { flex: 1; min-width: 0; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: #fff; border-radius: 8px; padding: 8px 10px; font-size: 14px; }
+.pres-folder option { color: #000; }
+.pres-counter { font-size: 13px; color: #aeb4c0; white-space: nowrap; }
+.pres-timer { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; background: rgba(255,255,255,.08); border-radius: 8px; padding: 6px 10px; white-space: nowrap; }
+.pres-close { background: none; border: none; color: #aeb4c0; font-size: 24px; cursor: pointer; line-height: 1; padding: 4px 8px; }
+.pres-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 18px; overflow: auto; touch-action: pan-y; }
+.pres-card { background: #fff; color: #1a1a1a; border-radius: 18px; padding: 26px 28px; width: 100%; max-width: 780px; box-shadow: 0 12px 40px rgba(0,0,0,.5); display: grid; grid-template-columns: 1fr 1fr; gap: 0 26px; }
+.pres-card .pc-head { grid-column: 1/-1; display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+.pres-card .pc-num { width: 42px; height: 42px; border-radius: 50%; background: #e8f0fe; color: #1a73e8; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+.pres-card .pc-title { font-size: 26px; font-weight: 700; line-height: 1.2; flex: 1; }
+.pres-card .pc-lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #999; margin-bottom: 12px; }
+.pres-card .pc-theses { list-style: none; padding: 0; margin: 0; }
+.pres-card .pc-theses li { font-size: 19px; line-height: 1.5; padding: 9px 0 9px 24px; position: relative; border-bottom: 1px solid #eee; }
+.pres-card .pc-theses li:last-child { border-bottom: none; }
+.pres-card .pc-theses li::before { content: "→"; position: absolute; left: 0; color: #1a73e8; top: 9px; }
+.pres-card .pc-term { display: inline-block; font-size: 16px; padding: 6px 13px; border-radius: 20px; background: #e8f0fe; color: #1a73e8; margin: 3px 4px 3px 0; line-height: 1.4; }
+.pres-card .pc-note { grid-column: 1/-1; margin-top: 18px; padding: 14px 16px; border-radius: 0 10px 10px 0; border-left: 4px solid; font-size: 16px; line-height: 1.5; }
+.pres-card .pc-note.info { background: #e8f0fe; border-color: #1a73e8; color: #1557b0; }
+.pres-card .pc-note.warn { background: #fff8e1; border-color: #f9ab00; color: #7a4f00; }
+.pres-card .pc-note.danger { background: #fce8e6; border-color: #d93025; color: #b3261e; }
+.pres-nav { display: flex; gap: 12px; padding: 14px; border-top: 1px solid rgba(255,255,255,.12); flex-shrink: 0; }
+.pres-nav button { flex: 1; padding: 16px; border-radius: 12px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,.1); color: #fff; }
+.pres-nav button:disabled { opacity: .35; cursor: not-allowed; }
+.pres-nav button.next { background: #1a73e8; }
+@media (max-width: 560px) {
+  .pres-card { padding: 18px; gap: 0 14px; }
+  .pres-card .pc-title { font-size: 20px; }
+  .pres-card .pc-num { width: 34px; height: 34px; font-size: 15px; }
+  .pres-card .pc-theses li { font-size: 15px; padding-left: 20px; }
+  .pres-card .pc-term { font-size: 13px; padding: 4px 10px; }
+  .pres-card .pc-note { font-size: 14px; }
+  .pres-card .pc-right { margin-top: 16px; }
+}
 </style>
 </head>
 <body>
@@ -329,6 +367,21 @@ input[type=file] { display: none; }
       <button class="btn-ghost" onclick="closeModal('modal-folder')">Отмена</button>
       <button class="btn-primary" onclick="createFolder()">Создать</button>
     </div>
+  </div>
+</div>
+
+<!-- Presentation overlay -->
+<div class="pres-overlay" id="pres-overlay">
+  <div class="pres-bar">
+    <select class="pres-folder" id="pres-folder" onchange="presSetFolder(this.value)"></select>
+    <span class="pres-counter" id="pres-counter"></span>
+    <span class="pres-timer" id="pres-timer">00:00</span>
+    <button class="pres-close" onclick="closePresentation()">✕</button>
+  </div>
+  <div class="pres-stage" id="pres-stage"></div>
+  <div class="pres-nav">
+    <button id="pres-prev" onclick="presNav(-1)">◀ Назад</button>
+    <button id="pres-next" class="next" onclick="presNav(1)">Далее ▶</button>
   </div>
 </div>
 
@@ -567,11 +620,11 @@ function renderGenerate() {
         📄 Документ
       </button>
       <button onclick="document.getElementById('file-inp-photo').click()" style="padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);display:flex;align-items:center;justify-content:center;gap:6px">
-        📷 Фото / Камера
+        🖼 Изображение
       </button>
     </div>
     <input type="file" id="file-inp-doc" accept=".txt,.md,text/plain" multiple style="display:none">
-    <input type="file" id="file-inp-photo" accept="image/*" capture="environment" multiple style="display:none">
+    <input type="file" id="file-inp-photo" accept="image/*" multiple style="display:none">
     <div class="file-list" id="file-list"></div>
 
     <div class="step-label">⚙️ Параметры</div>
@@ -580,20 +633,35 @@ function renderGenerate() {
         <label>Карточек на файл</label>
         <select id="num-cards">
           <option value="3">3</option>
-          <option value="4" selected>4</option>
+          <option value="4">4</option>
           <option value="5">5</option>
-          <option value="6">6</option>
+          <option value="6" selected>6</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="16">16</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="33">33</option>
         </select>
       </div>
       <div class="opt-group">
+        <label>Глубина</label>
+        <select id="depth-type">
+          <option value="shallow">Поверхностно</option>
+          <option value="deep" selected>Подробно</option>
+        </select>
+      </div>
+      <div class="opt-group" style="grid-column:1/-1">
         <label>Формат занятия</label>
         <select id="fmt-type">
-          <option value="семинара">Семинар</option>
-          <option value="лекции">Лекция</option>
-          <option value="практики">Практика</option>
+          <option value="seminar">Семинар</option>
+          <option value="lecture">Лекция</option>
+          <option value="practice">Практика</option>
         </select>
       </div>
     </div>
+    <div class="ai-hint" style="margin:-4px 0 12px">Ориентир: ~6 карточек на 1500 символов. Модель может добавить ещё (до 33), если иначе теряется смысл. До 8000 символов на документ.</div>
 
     <button class="btn-gen" id="gen-btn" onclick="startGenerate()" disabled>✦ Создать карточки</button>
     <div class="loading-wrap" id="loading" style="display:none">
@@ -656,7 +724,11 @@ function saveKey() { /* устарело — используется saveAIKey 
 async function startGenerate() {
   const folderId = document.getElementById('folder-select').value;
   const numCards = parseInt(document.getElementById('num-cards').value);
+  const depth = document.getElementById('depth-type').value;
   const fmt = document.getElementById('fmt-type').value;
+  const fmtLabels = { lecture: 'Лекция', seminar: 'Семинар', practice: 'Практика' };
+  const fmtLabel = fmtLabels[fmt] || 'Семинар';
+  const MAX_CARDS = 33;
   const errBox = document.getElementById('error-box');
   const loadEl = document.getElementById('loading');
   const loadMsg = document.getElementById('loading-msg');
@@ -672,8 +744,8 @@ async function startGenerate() {
       const f = state.uploadedFiles[i];
       loadMsg.textContent = `Обрабатываю файл ${i+1}/${state.uploadedFiles.length}: ${f.name}`;
       const content = await readFile(f);
-      const cards = await callAI(content, f.name, numCards, fmt);
-      cards.forEach(c => { c.id = uid(); c.source = f.name; c.created = Date.now(); c.folderId = folderId; });
+      const cards = await callAI(content, f.name, numCards, fmt, depth, MAX_CARDS);
+      cards.forEach(c => { c.id = uid(); c.source = f.name; c.created = Date.now(); c.folderId = folderId; c.fmtLabel = fmtLabel; });
       newCards.push(...cards);
     }
     if (!state.cards[folderId]) state.cards[folderId] = [];
@@ -707,27 +779,54 @@ function readFile(f) {
   });
 }
 
-function buildPrompt(content, fname, numCards, fmt) {
-  let p = `Ты — помощник преподавателя. Проанализируй ${content.type === 'image' ? 'изображение с текстом/конспектом' : 'текст'} и создай структурированные карточки-подсказки для проведения ${fmt}.
+function buildPrompt(content, fname, numCards, fmt, depth, maxCards) {
+  const fmtMap = {
+    lecture:  { gen: 'лекции',   line: 'Тезисы — что изложить и объяснить; термины — понятия для введения слушателям.' },
+    seminar:  { gen: 'семинара', line: 'Тезисы — что вынести на обсуждение/разбор; отражай вопросы только если они есть в тексте.' },
+    practice: { gen: 'практики', line: 'Тезисы — на что обратить внимание при выполнении; шаги и действия включай ТОЛЬКО если они явно описаны в материале.' },
+  };
+  const F = fmtMap[fmt] || fmtMap.seminar;
+  const depthLine = depth === 'shallow'
+    ? 'поверхностно — только опорные смыслы; одна карточка на крупную подтему; 2–3 тезиса на карточку.'
+    : 'подробно — разворачивай подтемы, отдельные карточки на ключевые понятия; 3–6 тезисов на карточку.';
 
-Создай ровно ${numCards} карточки. Верни ТОЛЬКО JSON массив, без пояснений, без markdown-обёртки.
+  let p = `Ты — ассистент преподавателя. Преврати ${content.type === 'image' ? 'изображение с текстом/конспектом' : 'текст'} в набор карточек-подсказок для проведения ${F.gen}.
 
-Каждая карточка:
+ГЛАВНАЯ ЦЕЛЬ
+Раскрыть тему и её подтемы через ключевые понятия и смыслы. Не пересказывай текст целиком — находи главное и формулируй краткими тезисами. Одна карточка = одна смысловая единица (подтема, понятие, логический блок).
+
+СКОЛЬКО КАРТОЧЕК
+Сделай примерно ${numCards} карточек. Можешь сделать больше — но не более ${maxCards} — ТОЛЬКО если иначе теряется смысл или контекст. Не дроби искусственно ради числа и не сжимай в ущерб смыслу.
+
+ГЛУБИНА
+${depthLine}
+
+РАБОТА С ИСХОДНЫМ ТЕКСТОМ
+- Выделения (жирный, курсив, маркеры, заголовки, **…**, списки) — приоритет: они показывают, что важно.
+- Если материал уже структурирован тезисами/пунктами — сохрани эту структуру и формулировки. Не сокращай и не переписывай готовые тезисы, используй их как основу карточек.
+- Соблюдай исходный порядок: карточки идут в той же логической последовательности, что и текст.
+- НЕ добавляй директивных указаний (команды «сделайте», «выполните», шаги), если их нет в оригинале. Формат задаёт угол подачи, а не повод выдумывать действия.
+
+ФОРМАТ ЗАНЯТИЯ
+${F.line}
+
+ВЫХОД
+Верни ТОЛЬКО JSON-массив, без markdown и пояснений. Каждый элемент:
 {
-  "title": "Краткое название темы (3-6 слов)",
-  "key_points": ["тезис 1 — глагольная фраза до 12 слов", "тезис 2", "тезис 3"],
-  "key_terms": ["термин: краткое определение 5-7 слов"],
-  "important_note": "Важный нюанс, 1-2 предложения.",
-  "note_type": "warn"
+  "title": "название смысловой единицы (3-6 слов)",
+  "key_points": ["ёмкий тезис до ~12 слов", "..."],
+  "key_terms": ["термин: краткое определение"],
+  "important_note": "акцент из материала или пусто",
+  "note_type": "info | warn | danger"
 }
 
-Правила:
-- key_points: от 2 до 6 тезисов — глагольные, конкретные, без воды
-- key_terms: 2-4 термина, специфичных для этой темы
-- important_note: нюанс, который студенты часто упускают
-- note_type: "warn" (предупреждение), "info" (подсказка), "danger" (запрет/ошибка)
-- Ответ — только JSON массив`;
-  if (content.type !== 'image') p += `\n\nТекст (${fname}):\n${content.data.slice(0, 9000)}`;
+Правила полей:
+- key_points: 2-6 тезисов по существу, без воды.
+- key_terms: только понятия, реально встречающиеся в материале (0-4).
+- important_note: бери из выделенного/важного в тексте; не выдумывай.
+- note_type: info — подсказка, warn — на что обратить внимание, danger — типичная ошибка/запрет (только если упомянуты).
+- Ответ — только JSON массив, ничего вне него.`;
+  if (content.type !== 'image') p += `\n\nТЕКСТ (${fname}):\n${content.data.slice(0, 16000)}`;
   return p;
 }
 
@@ -742,8 +841,8 @@ function parseCardsJSON(raw) {
 }
 
 // Маршрутизатор: вызывает выбранного провайдера
-async function callAI(content, fname, numCards, fmt) {
-  const prompt = buildPrompt(content, fname, numCards, fmt);
+async function callAI(content, fname, numCards, fmt, depth, maxCards) {
+  const prompt = buildPrompt(content, fname, numCards, fmt, depth, maxCards);
   if (aiCfg.provider === 'claude') return callClaude(prompt, content);
   return callGemini(prompt, content);
 }
@@ -762,7 +861,7 @@ async function callGemini(prompt, content) {
         contents: [{ parts }],
         generationConfig: {
           temperature: 0.35,
-          maxOutputTokens: 8192,
+          maxOutputTokens: 32768,
           responseMimeType: 'application/json'
         }
       })
@@ -808,7 +907,7 @@ async function callClaude(prompt, content) {
     },
     body: JSON.stringify({
       model: aiCfg.claudeModel,
-      max_tokens: 4096,
+      max_tokens: 16000,
       temperature: 0.35,
       messages: [{ role: 'user', content: userContent }]
     })
@@ -844,13 +943,15 @@ function renderCards() {
         <span style="font-size:20px">${folder?.emoji||'📁'}</span>
         <span style="font-size:16px;font-weight:600">${esc(folder?.name||'')}</span>
       </div>
+      ${folderSelectorHTML()}
       <div class="empty-state"><div class="big-icon">🃏</div><p>В этом проекте нет карточек.<br>Создайте их на вкладке «Создать».</p></div>`;
   }
 
   const toolbar = `<div class="cards-toolbar">
-    <button class="toolbar-btn primary-btn" onclick="downloadAllCards()">⬇ Скачать HTML</button>
+    <button class="toolbar-btn primary-btn" onclick="openPresentation()">▶ Презентация</button>
+    <button class="toolbar-btn" onclick="downloadAllCards()">⬇ HTML</button>
     <button class="toolbar-btn" onclick="downloadCardsJSON()">⬇ JSON</button>
-    <button class="toolbar-btn" onclick="copyAllText()">📋 Копировать текст</button>
+    <button class="toolbar-btn" onclick="copyAllText()">📋 Копировать</button>
     <button class="toolbar-btn" onclick="clearFolderCards()" style="color:var(--danger);border-color:var(--danger)">✕ Очистить</button>
   </div>`;
 
@@ -881,15 +982,27 @@ function renderCards() {
       <span style="font-size:16px;font-weight:600">${esc(folder?.name||'')}</span>
       <span style="font-size:12px;color:var(--text3);margin-left:auto">${allCards.length} карт.</span>
     </div>
+    ${folderSelectorHTML()}
     ${toolbar}
     <div id="error-box" class="error-box"></div>
     ${cardsHtml}`;
 }
 
+function folderSelectorHTML() {
+  if (state.folders.length <= 1) return '';
+  const opts = state.folders.map(f =>
+    `<option value="${f.id}" ${f.id === state.activeFolderId ? 'selected' : ''}>${f.emoji||'📁'} ${esc(f.name)}</option>`
+  ).join('');
+  return `<select onchange="switchActiveFolder(this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 11px;font-size:14px;color:var(--text);margin-bottom:12px">${opts}</select>`;
+}
+
+function switchActiveFolder(id) {
+  state.activeFolderId = id;
+  renderScreen();
+}
+
 function renderCard(card, idx) {
   const pts = card.key_points || [];
-  const isHorizontal = pts.length <= 3;
-  const orientation = isHorizontal ? 'horizontal' : 'vertical';
 
   const theses = pts.map(p => `<li>${esc(p)}</li>`).join('');
   const terms = (card.key_terms || []).map(t => `<span class="term-pill">${esc(t)}</span>`).join('');
@@ -902,14 +1015,14 @@ function renderCard(card, idx) {
     </div>` : '';
 
   const termsBlock = terms ? `<div class="terms-wrap"><div class="sec-lbl">Термины</div>${terms}</div>` : '';
+  const badge = card.fmtLabel ? `<span class="card-format-badge">${esc(card.fmtLabel)}</span>` : '';
 
-  if (isHorizontal) {
-    return `<div class="sem-card horizontal" id="card-${card.id}">
+  return `<div class="sem-card horizontal" id="card-${card.id}">
       <div class="card-header">
         <div class="card-num">${idx}</div>
         <div class="card-title-wrap">
           <div class="card-title">${esc(card.title)}</div>
-          <span class="card-format-badge">↔ горизонтальная</span>
+          ${badge}
         </div>
         <div class="card-actions">
           <button class="card-act-btn" title="Копировать" onclick="copyCard('${card.id}')">📋</button>
@@ -923,28 +1036,112 @@ function renderCard(card, idx) {
       <div class="card-right">${termsBlock}</div>
       ${note}
     </div>`;
-  } else {
-    return `<div class="sem-card vertical" id="card-${card.id}">
-      <div class="card-header">
-        <div class="card-num">${idx}</div>
-        <div class="card-title-wrap">
-          <div class="card-title">${esc(card.title)}</div>
-          <span class="card-format-badge">↕ вертикальная</span>
-        </div>
-        <div class="card-actions">
-          <button class="card-act-btn" title="Копировать" onclick="copyCard('${card.id}')">📋</button>
-          <button class="card-act-btn" title="Удалить" onclick="deleteCard('${card.id}')">✕</button>
-        </div>
-      </div>
-      <div class="sec-lbl">Тезисы</div>
-      <ul class="theses-list">${theses}</ul>
-      <div class="card-right">${termsBlock}</div>
-      ${note}
-    </div>`;
-  }
 }
 
 function bindCardsEvents() {}
+
+// ══════════════ PRESENTATION ══════════════
+let presState = { folderId: null, idx: 0, cards: [], cardStart: 0, timerInt: null };
+let _presTouchX = null;
+
+function openPresentation() {
+  const fid = state.activeFolderId;
+  const cards = fid ? (state.cards[fid] || []) : [];
+  if (!cards.length) { showToast('Нет карточек для презентации'); return; }
+  presState.folderId = fid;
+  presState.idx = 0;
+  const sel = document.getElementById('pres-folder');
+  sel.innerHTML = state.folders
+    .filter(f => (state.cards[f.id] || []).length)
+    .map(f => `<option value="${f.id}" ${f.id === fid ? 'selected' : ''}>${f.emoji||'📁'} ${esc(f.name)} (${(state.cards[f.id]||[]).length})</option>`)
+    .join('');
+  document.getElementById('pres-overlay').classList.add('open');
+  loadPresCards();
+  document.addEventListener('keydown', presKey);
+}
+
+function loadPresCards() {
+  presState.cards = state.cards[presState.folderId] || [];
+  if (presState.idx > presState.cards.length - 1) presState.idx = 0;
+  presRender();
+  startPresTimer();
+}
+
+function presSetFolder(id) {
+  presState.folderId = id;
+  presState.idx = 0;
+  loadPresCards();
+}
+
+function presRender() {
+  const c = presState.cards[presState.idx];
+  const stage = document.getElementById('pres-stage');
+  if (!c) { stage.innerHTML = ''; return; }
+  const theses = (c.key_points || []).map(p => `<li>${esc(p)}</li>`).join('');
+  const terms = (c.key_terms || []).map(t => `<span class="pc-term">${esc(t)}</span>`).join('');
+  const nt = c.note_type || 'info';
+  const noteLbls = { warn: '⚠ Важный нюанс', info: '💡 Подсказка', danger: '🚫 Запрет' };
+  const note = c.important_note ? `<div class="pc-note ${nt}"><b>${noteLbls[nt]||'Нюанс'}.</b> ${esc(c.important_note)}</div>` : '';
+  stage.innerHTML = `
+    <div class="pres-card">
+      <div class="pc-head">
+        <div class="pc-num">${presState.idx+1}</div>
+        <div class="pc-title">${esc(c.title||'')}</div>
+      </div>
+      <div>
+        <div class="pc-lbl">Тезисы</div>
+        <ul class="pc-theses">${theses}</ul>
+      </div>
+      <div class="pc-right">${terms ? `<div class="pc-lbl">Термины</div>${terms}` : ''}</div>
+      ${note}
+    </div>`;
+  document.getElementById('pres-counter').textContent = `${presState.idx+1} / ${presState.cards.length}`;
+  document.getElementById('pres-prev').disabled = presState.idx === 0;
+  document.getElementById('pres-next').disabled = presState.idx >= presState.cards.length - 1;
+  attachPresSwipe(stage);
+}
+
+function presNav(dir) {
+  const ni = presState.idx + dir;
+  if (ni < 0 || ni >= presState.cards.length) return;
+  presState.idx = ni;
+  presState.cardStart = Date.now(); // таймер на карточку обнуляется при переходе
+  presRender();
+}
+
+function startPresTimer() {
+  clearInterval(presState.timerInt);
+  presState.cardStart = Date.now();
+  presState.timerInt = setInterval(() => {
+    const s = Math.floor((Date.now() - presState.cardStart) / 1000);
+    const mm = String(Math.floor(s / 60)).padStart(2, '0');
+    const ss = String(s % 60).padStart(2, '0');
+    const t = document.getElementById('pres-timer');
+    if (t) t.textContent = `${mm}:${ss}`;
+  }, 250);
+}
+
+function closePresentation() {
+  clearInterval(presState.timerInt);
+  document.getElementById('pres-overlay').classList.remove('open');
+  document.removeEventListener('keydown', presKey);
+}
+
+function presKey(e) {
+  if (e.key === 'ArrowRight') presNav(1);
+  else if (e.key === 'ArrowLeft') presNav(-1);
+  else if (e.key === 'Escape') closePresentation();
+}
+
+function attachPresSwipe(el) {
+  el.ontouchstart = e => { _presTouchX = e.changedTouches[0].clientX; };
+  el.ontouchend = e => {
+    if (_presTouchX === null) return;
+    const dx = e.changedTouches[0].clientX - _presTouchX;
+    if (Math.abs(dx) > 50) presNav(dx < 0 ? 1 : -1);
+    _presTouchX = null;
+  };
+}
 
 function deleteCard(id) {
   const fid = state.activeFolderId;
@@ -1013,35 +1210,23 @@ function downloadCardsJSON() {
 function buildExportHTML(folder, cards) {
   const cardsHtml = cards.map((card, i) => {
     const pts = card.key_points || [];
-    const isH = pts.length <= 3;
     const theses = pts.map(p => `<li>${p}</li>`).join('');
     const terms = (card.key_terms||[]).map(t => `<span class="tp">${t}</span>`).join('');
     const noteColors = { warn: '#fff8e1;border-left:3px solid #f9ab00', info: '#e8f0fe;border-left:3px solid #1a73e8', danger: '#fce8e6;border-left:3px solid #d93025' };
     const nc = noteColors[card.note_type||'info'];
     const note = card.important_note ? `<div style="background:${nc};padding:8px 11px;border-radius:0 6px 6px 0;margin-top:10px;font-size:12px">${card.important_note}</div>` : '';
+    const badge = card.fmtLabel ? `<span style="font-size:10px;background:#e8f0fe;color:#1a73e8;padding:2px 7px;border-radius:20px;margin-left:auto">${card.fmtLabel}</span>` : '';
 
-    if (isH) return `
+    return `
       <div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">
         <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <div class="num">${i+1}</div>
           <b style="font-size:15px">${card.title}</b>
-          <span style="font-size:10px;background:#e8f0fe;color:#1a73e8;padding:2px 7px;border-radius:20px;margin-left:auto">↔</span>
+          ${badge}
         </div>
         <div><div class="lbl">Тезисы</div><ul class="tl">${theses}</ul></div>
         <div>${terms ? `<div class="lbl">Термины</div>${terms}` : ''}</div>
         <div style="grid-column:1/-1">${note}</div>
-      </div>`;
-    return `
-      <div class="card">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <div class="num">${i+1}</div>
-          <b style="font-size:15px">${card.title}</b>
-          <span style="font-size:10px;background:#e8f0fe;color:#1a73e8;padding:2px 7px;border-radius:20px;margin-left:auto">↕</span>
-        </div>
-        <div class="lbl">Тезисы</div>
-        <ul class="tl">${theses}</ul>
-        ${terms ? `<div style="margin-top:10px"><div class="lbl">Термины</div>${terms}</div>` : ''}
-        ${note}
       </div>`;
   }).join('');
 
